@@ -1,0 +1,18 @@
+0     NO_TYPE,		
+1     BOY_IMG,		@
+2     CAT_GIRL_IMG,	or
+3     HORN_GIRL_IMG,	+
+4     PINK_GIRL_IMG,
+5     PRINCESS_IMG,
+6     STAR_IMG,		$	
+7     ON_GOAL_IMG,	*	
+8     OFF_GOAL_IMG,	.
+9     FLOOR_IMG,	^
+10    WALL_IMG,		#
+11    CORNER_IMG,	%
+12    GRASS_IMG,	' '
+13    ROCK_IMG,
+14    SHORT_TREE_IMG,
+15    TALL_TREE_IMG,
+16    UGLY_TREE_IMG,
+17    TOTAL_TEXTURES
