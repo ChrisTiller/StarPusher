@@ -10,7 +10,7 @@ SDL_INCLUDE:= -I/usr/include
 
 #File Folders
 DEPS:= ../include/*.h
-PRJCTFLDR:= ~/Documents/Projects/StarPusher/src/
+PRJCTFLDR:= ~/Development/StarPusher/src/
 DEPENDSFLDR:= ../depends/
 OBJFLDR:= ../obj/
 EXEFLDR:= ../bin/

@@ -3,6 +3,7 @@
 
 #include "SDL2/SDL.h"
 #include "GameState.h"
+#include "Texture.h"
 
 
 class SDLWindow;
@@ -40,7 +41,7 @@ private:
 
     Game* _game;
     SDLWindow* _window;
-    SDL_Texture* _texture;
+    Texture _texture;
 
     Uint8 _alpha;
 

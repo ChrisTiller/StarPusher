@@ -10,6 +10,8 @@ void PlayState::init(Game* game) {
     _game = game;
 
     _window = _game->getWindowPtr();
+
+    _texture.loadTexture("../resources/images/cloud_background1.jpg", _window->getRenderer());
 }
 
 void PlayState::cleanup() {
@@ -50,8 +52,9 @@ void PlayState::update() {
 
 void PlayState::draw() {
 
-     _window->clear();
+    _window->clear();
 
+    _window->placeTexture(&_texture, NULL, NULL);
 
     _window->render();
 }

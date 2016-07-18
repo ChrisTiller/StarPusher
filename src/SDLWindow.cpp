@@ -1,4 +1,5 @@
 #include "../include/SDLWindow.h"
+#include "../include/Texture.h"
 
 SDLWindow::SDLWindow(string name, int width, int height) 
     : _r(255), _g(255), _b(255) {
@@ -95,10 +96,10 @@ void SDLWindow::clear() {
 
 }
 
-void SDLWindow::placeTexture(SDL_Texture* texture, SDL_Rect* src, SDL_Rect* dst) {
+void SDLWindow::placeTexture(Texture* texture, SDL_Rect* src, SDL_Rect* dst) {
 
     if (!_minimized) {
-        SDL_RenderCopy(_renderer, texture, src, dst);
+        SDL_RenderCopy(_renderer, texture->getTexture(), src, dst);
     }
 
 }

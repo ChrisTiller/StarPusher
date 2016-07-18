@@ -39,6 +39,12 @@ void Game::run() {
 
             }
 
+            switch (event.key.keysym.sym) {
+                case SDLK_ESCAPE:
+                    quit();
+                    break;
+            }
+
             _manager.handleEvents(event);
 
         }

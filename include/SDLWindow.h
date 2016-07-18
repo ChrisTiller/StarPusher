@@ -6,6 +6,8 @@
 
 using std::string;
 
+class Texture;
+
 class SDLWindow {
 
 public:
@@ -19,7 +21,7 @@ public:
     void handleEvents(SDL_Event&);
     
     void clear();
-    void placeTexture(SDL_Texture*, SDL_Rect*, SDL_Rect*);
+    void placeTexture(Texture*, SDL_Rect*, SDL_Rect*);
     void render();
 
     void setDrawColor(int , int , int );    
