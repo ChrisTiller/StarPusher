@@ -11,10 +11,20 @@ void PlayState::init(Game* game) {
 
     _window = _game->getWindowPtr();
 
-    _texture.loadTexture("../resources/images/cloud_background1.jpg", _window->getRenderer());
+    _texture.loadTexture("../resources/images/cloud_background.png", _window->getRenderer());
+    _player.loadTexture("../resources/images/boy.png", _window->getRenderer());
+
+    textRect.x = ( _window->getWidth() / 2 ) - ( _player.getWidth() / 2 );
+    textRect.y = ( _window->getHeight() / 2 ) - ( _player.getHeight() / 2 );
+    textRect.w = _player.getWidth();
+    textRect.h = _player.getHeight();
 }
 
 void PlayState::cleanup() {
+
+    _texture.deleteTexture();
+    _player.deleteTexture();
+
     _window = NULL;
     _game = NULL;
 }
@@ -27,27 +37,44 @@ void PlayState::handleEvents(SDL_Event& event) {
 
         switch( event.key.keysym.sym ) {
 
-            case SDLK_1:
-                _window->setDrawColor(0,255,0);
+            case SDLK_UP:
+                textRect.y-=_player.getHeight();
                 break;
 
-            case SDLK_2:
-                _window->setDrawColor(0,0,255);
+            case SDLK_DOWN:
+                textRect.y+=_player.getHeight();
                 break;
                 
-            case SDLK_3:
-                _window->setDrawColor(255,0,0);
+            case SDLK_LEFT:
+                textRect.x-=_player.getWidth();
+                break;
+            
+            case SDLK_RIGHT:
+                textRect.x+=_player.getWidth();
                 break;
 
             case SDLK_BACKSPACE:
                 _game->changeState(IntroState::instance());
                 break;
+    
         }
     }
 }
 
 void PlayState::update() {
 
+    if (textRect.x + textRect.w > _window->getWidth()) {
+        textRect.x = _window->getWidth() - textRect.w;
+    }
+    if (textRect.y + textRect.h > _window->getHeight()) {
+        textRect.y = _window->getHeight() - textRect.h;
+    }
+    if (textRect.x < 0) {
+        textRect.x = 0;
+    }
+    if (textRect.y < 0) {
+        textRect.y = 0;
+    }
 }
 
 void PlayState::draw() {
@@ -55,6 +82,8 @@ void PlayState::draw() {
     _window->clear();
 
     _window->placeTexture(&_texture, NULL, NULL);
+
+    _window->placeTexture(&_player, NULL, &textRect);
 
     _window->render();
 }

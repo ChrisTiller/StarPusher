@@ -43,6 +43,10 @@ private:
     SDLWindow* _window;
     Texture _texture;
 
+    Texture _player;
+
+    SDL_Rect textRect;
+
 };
 
 

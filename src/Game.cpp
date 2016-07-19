@@ -70,3 +70,11 @@ SDLWindow* Game::getWindowPtr() {
 void Game::changeState(GameState* newState) {
     _manager.changeState(newState);
 }
+
+void Game::pushState(GameState* newState) {
+    _manager.pushState(newState);
+}
+
+void Game::popState() {
+    _manager.popState();
+}

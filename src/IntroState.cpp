@@ -12,25 +12,25 @@ void IntroState::init(Game* game) {
     _window = _game->getWindowPtr();
 
     _texture.loadTexture("../resources/images/star_title.png", _window->getRenderer());
+    _background.loadTexture("../resources/images/cloud_background.png", _window->getRenderer());
 
-    SDL_SetTextureAlphaMod(_texture.getTexture(), 0);
+    _texture.setAlpha(0);
 
     _alpha = 0;
 
-    int w,h;
-
-    SDL_QueryTexture(_texture.getTexture(), NULL, NULL, &w, &h);
-
-    textRect.x = ( _window->getWidth() / 2 ) - ( w / 2 );
-    textRect.y = ( _window->getHeight() / 2 ) - ( h / 2 );
-    textRect.w = w;
-    textRect.h = h;
+    textRect.x = ( _window->getWidth() / 2 ) - ( _texture.getWidth() / 2 );
+    textRect.y = ( _window->getHeight() / 2 ) - ( _texture.getHeight() / 2 );
+    textRect.w = _texture.getWidth();
+    textRect.h = _texture.getHeight();
 
     _window->setDrawColor(255,255,255);
 
 }
 
 void IntroState::cleanup() {
+
+    _texture.deleteTexture();
+    _background.deleteTexture();
 
     _game = NULL;
     _window = NULL;
@@ -48,7 +48,12 @@ void IntroState::handleEvents(SDL_Event& event) {
            case SDLK_RETURN:
             _game->changeState(PlayState::instance());
             break;
-
+            case SDLK_UP:
+                
+                break;
+            case SDLK_DOWN:
+            
+                break;
         }
     }
 }
@@ -64,7 +69,7 @@ void IntroState::update() {
         _alpha = 254;
     }
 
-     SDL_SetTextureAlphaMod(_texture.getTexture(), _alpha);
+     _texture.setAlpha(_alpha);
 
 }
 
@@ -72,6 +77,7 @@ void IntroState::draw() {
 
     _window->clear();
 
+    _window->placeTexture(&_background, NULL, NULL);
     _window->placeTexture(&_texture, NULL, &textRect);
 
     _window->render();

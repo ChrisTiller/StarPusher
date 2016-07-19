@@ -42,6 +42,7 @@ private:
     Game* _game;
     SDLWindow* _window;
     Texture _texture;
+    Texture _background;
 
     Uint8 _alpha;
 

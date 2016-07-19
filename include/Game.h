@@ -22,6 +22,8 @@ public:
     void quit();
 
     void changeState(GameState* newState);
+    void pushState(GameState* newState);
+    void popState();
 
     SDLWindow* getWindowPtr();
 
