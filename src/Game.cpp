@@ -10,6 +10,8 @@ Game::Game(string name, int width, int height)
     }
 
     _manager.setGame(this);
+    _resourceManager->setGame(this);
+    _resourceManager->setResourcePath("/home/Development/StarPusher/resources");
 
     _manager.changeState(IntroState::instance());
 

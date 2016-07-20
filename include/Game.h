@@ -6,6 +6,7 @@
 #include "stdio.h"
 #include "SDLWindow.h"
 #include "GameStateManager.h"
+#include "ResourceManager.h"
 #include <vector>
 
 using std::vector;
@@ -32,6 +33,7 @@ private:
     SDLWindow  _window;
 
     GameStateManager _manager;
+    ResourceManager* _resourceManager;
 
     bool _running;
 
