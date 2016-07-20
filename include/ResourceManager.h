@@ -4,6 +4,7 @@
 #include <memory>
 #include <map>
 #include <string>
+#include <system_error>
 #include "SDL2/SDL.h"
 #include "SDL2/SDL_image.h"
 #include "SDL2/SDL_ttf.h"
@@ -37,10 +38,19 @@ protected:
 
 private:
 
-    using TexturePtr = std::unique_ptr<SDL_Texture, decltype(&SDL_DestroyTexture)>;
+    template<typename Creator, typename Destructor, typename... Arguments>
+    auto make_resource(Creator c, Destructor d, Arguments&&... args)
+    {
+        auto r = c(std::forward<Arguments>(args)...);
+        if (!r) { throw std::system_error(errno, std::generic_category()); }
+        return std::unique_ptr<std::decay_t<decltype(*r)>, decltype(d)>(r, d);
+    }
+
+    using TexturePtr = std::unique_ptr<SDL_Texture, void(*)(SDL_Texture*)>;
+    using FontPtr = std::unique_ptr<TTF_Font, void(*)(TTF_Font*)>;
 
     std::map<std::string, TexturePtr > _textures;
-    std::map<std::string, std::unique_ptr<TTF_Font, void(*)(TTF_Font*)> > _fonts;
+    std::map<std::string, FontPtr > _fonts;
 
     Game* _game;
 

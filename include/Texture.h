@@ -6,14 +6,15 @@
 
 using std::string;
 
+class ResourceManager;
+
 class Texture {
 
 public:
     Texture();
-    Texture(std::string, SDL_Renderer*);
-    ~Texture();
+    Texture(std::string);
 
-    bool loadTexture(std::string, SDL_Renderer*);
+    bool loadTexture(std::string);
 
     SDL_Texture* getTexture() const;
     void setAlpha(Uint8);
@@ -22,12 +23,12 @@ public:
     int getHeight() const;
     double getRatio() const;
 
-    void deleteTexture();
-
 private:
 
     SDL_Texture* _texture;
     
+    ResourceManager* _resourceManager;
+
     int _width;
     int _height;
     double _ratio;

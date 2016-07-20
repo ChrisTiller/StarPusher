@@ -1,20 +1,18 @@
 #include "../include/Texture.h"
+#include "../include/ResourceManager.h"
 #include "SDL2/SDL_image.h"
+#include <iostream>
 
 Texture::Texture() {
     _texture = NULL;
 }
 
-Texture::Texture(string fileName, SDL_Renderer* renderer) {
-    if (!loadTexture(fileName, renderer)) {
+Texture::Texture(string name) {
+    if (!loadTexture(name)) {
         return;
     }
 }
 
-Texture::~Texture() {
-    SDL_DestroyTexture(_texture);
-    _texture = NULL;
-}
 
 SDL_Texture* Texture::getTexture() const {
     return _texture;
@@ -24,11 +22,12 @@ void Texture::setAlpha(Uint8 alpha) {
     SDL_SetTextureAlphaMod(_texture, alpha);
 }
 
-bool Texture::loadTexture(string fileName, SDL_Renderer* renderer) {
+bool Texture::loadTexture(string name) {
     
-    _texture = SDL_CreateTextureFromSurface(renderer, IMG_Load(fileName.c_str()));
+    _texture = _resourceManager->getInstance()->getTexture(name);
 
     if (!_texture) {
+        printf("false");
         return false;
     }
 
@@ -49,11 +48,4 @@ int Texture::getHeight() const {
 
 double Texture::getRatio() const {
     return _ratio;
-}
-
-void Texture::deleteTexture() {
-    if (_texture) {
-        SDL_DestroyTexture(_texture);
-        _texture = NULL;
-    }
 }

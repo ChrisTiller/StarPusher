@@ -1,5 +1,6 @@
 #include "../include/ResourceManager.h"
 #include "../include/Game.h"
+#include <iostream>
 
 ResourceManager* ResourceManager::_instance = NULL;
 
@@ -17,11 +18,9 @@ SDL_Texture* ResourceManager::getTexture(const std::string name) {
 
     if (it == _textures.end()) {
 
-        TexturePtr newTexture = std::make_unique<TexturePtr>(SDL_CreateTextureFromSurface(_game->getWindowPtr()->getRenderer(), IMG_Load((_resourcePath + "/images/" + name).c_str())), SDL_DestroyTexture);
+        _textures.insert(std::make_pair(name, _instance->make_resource(SDL_CreateTextureFromSurface, SDL_DestroyTexture, _game->getWindowPtr()->getRenderer(), IMG_Load((_resourcePath + "/images/" + name).c_str()))));
 
-        //_textures.insert(std::make_pair(name, newTexture));
-
-        return newTexture.get();
+        return getTexture(name);
 
     }
 
@@ -32,18 +31,17 @@ SDL_Texture* ResourceManager::getTexture(const std::string name) {
 
 TTF_Font* ResourceManager::getFont(const std::string name, int pointSize) {
 
-    /*auto it = _fonts.find(name);
+    auto it = _fonts.find(name);
 
     if (it == _fonts.end()) {
 
-        std::unique_ptr<TTF_Font, void(*)(TTF_Font*)> newFont = std::unique_ptr<TTF_Font, void(*)(TTF_Font*)>(TTF_OpenFont((_resourcePath + "/fonts/" + name).c_str(), pointSize), TTF_CloseFont);
+        FontPtr newFont = std::unique_ptr<TTF_Font, void(*)(TTF_Font*)>(TTF_OpenFont((_resourcePath + "/fonts/" + name).c_str(), pointSize), TTF_CloseFont);
 
-        _fonts.insert(std::make_pair(name, newFont));
+        _fonts.insert(std::make_pair(name, std::move(newFont)));
 
-        return newFont->get();
+        return getFont(name, pointSize);
 
     }
 
-    return it->second->get();*/
-    return NULL;
+    return it->second.get();
 }

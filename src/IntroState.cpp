@@ -11,8 +11,8 @@ void IntroState::init(Game* game) {
 
     _window = _game->getWindowPtr();
 
-    _texture.loadTexture("../resources/images/star_title.png", _window->getRenderer());
-    _background.loadTexture("../resources/images/cloud_background.png", _window->getRenderer());
+    _texture.loadTexture("star_title.png");
+    _background.loadTexture("cloud_background.png");
 
     _texture.setAlpha(0);
 
@@ -28,9 +28,6 @@ void IntroState::init(Game* game) {
 }
 
 void IntroState::cleanup() {
-
-    _texture.deleteTexture();
-    _background.deleteTexture();
 
     _game = NULL;
     _window = NULL;

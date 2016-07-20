@@ -11,8 +11,8 @@ void PlayState::init(Game* game) {
 
     _window = _game->getWindowPtr();
 
-    _texture.loadTexture("../resources/images/cloud_background.png", _window->getRenderer());
-    _player.loadTexture("../resources/images/boy.png", _window->getRenderer());
+    _texture.loadTexture("cloud_background.png");
+    _player.loadTexture("boy.png");
 
     textRect.x = ( _window->getWidth() / 2 ) - ( _player.getWidth() / 2 );
     textRect.y = ( _window->getHeight() / 2 ) - ( _player.getHeight() / 2 );
@@ -21,9 +21,6 @@ void PlayState::init(Game* game) {
 }
 
 void PlayState::cleanup() {
-
-    _texture.deleteTexture();
-    _player.deleteTexture();
 
     _window = NULL;
     _game = NULL;

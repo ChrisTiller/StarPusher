@@ -10,15 +10,16 @@ Game::Game(string name, int width, int height)
     }
 
     _manager.setGame(this);
-    _resourceManager->setGame(this);
-    _resourceManager->setResourcePath("/home/Development/StarPusher/resources");
+    _resourceManager->getInstance()->setGame(this);
+    _resourceManager->getInstance()->setResourcePath("/home/chris/Development/StarPusher/resources");
 
     _manager.changeState(IntroState::instance());
 
 }
 
 Game::~Game() {
-   SDL_Quit();
+    IMG_Quit();
+    SDL_Quit();
 }
 
 void Game::run() {
