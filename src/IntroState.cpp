@@ -23,6 +23,8 @@ void IntroState::init(Game* game) {
     textRect.w = _texture.getWidth();
     textRect.h = _texture.getHeight();
 
+    _game->getCamera().setUse(false);
+
     _window->setDrawColor(0x1E,0x09,255);
 
 }
@@ -46,10 +48,10 @@ void IntroState::handleEvents(SDL_Event& event) {
             _game->getGameStateManager().changeState(PlayState::instance());
             break;
             case SDLK_UP:
-                
+
                 break;
             case SDLK_DOWN:
-            
+
                 break;
         }
     }

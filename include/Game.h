@@ -8,6 +8,7 @@
 #include "GameStateManager.h"
 #include "ResourceManager.h"
 #include "Level.h"
+#include "Camera.h"
 #include <vector>
 
 using std::vector;
@@ -31,6 +32,9 @@ public:
 
     Level& getLevel();
 
+    Camera& getCamera();
+
+
 private:
 
     SDLWindow  _window;
@@ -38,6 +42,7 @@ private:
     GameStateManager _manager;
     ResourceManager* _resourceManager;
     Level _level;
+    Camera _camera;
 
     bool _running;
 

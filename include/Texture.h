@@ -22,7 +22,7 @@ class ResourceManager;
 class Texture {
 
 public:
-    Texture(SDL_Texture* = NULL);
+    Texture();
     Texture(std::string);
 
     bool loadTexture(std::string);

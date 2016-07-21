@@ -1,8 +1,8 @@
 #include "../include/Game.h"
 #include "../include/IntroState.h"
 
-Game::Game(string name, int width, int height) 
-    : _window(name, width, height), _running(true), _level("../resources/levels/test-level.txt") {    
+Game::Game(string name, int width, int height)
+    : _window(name, width, height), _running(true), _level("../resources/levels/test-level.txt") {
 
     if ((IMG_Init(IMG_INIT_PNG) & IMG_INIT_PNG) != IMG_INIT_PNG) {
         printf( "SDL_image could not initialize! SDL_image Error: %s\n", IMG_GetError() );
@@ -10,12 +10,15 @@ Game::Game(string name, int width, int height)
     }
 
     _manager.setGame(this);
+
     _resourceManager->getInstance()->setGame(this);
-    _resourceManager->getInstance()->setResourcePath("/home/chris/Development/StarPusher/resources");
+    _resourceManager->getInstance()->setResourcePath("../resources");
+
+
+    _manager.changeState(IntroState::instance());
 
     _level.setGame(this);
 
-    _manager.changeState(IntroState::instance());
 
 }
 
@@ -50,11 +53,14 @@ void Game::run() {
                     break;
             }
 
+
+            _camera.handleEvents(event);
             _manager.handleEvents(event);
 
         }
 
         _manager.update();
+        _camera.update();
         _manager.draw();
     }
 
@@ -82,4 +88,8 @@ ResourceManager* Game::getResourceManager() {
 
 Level& Game::getLevel() {
     return _level;
+}
+
+Camera& Game::getCamera() {
+    return _camera;
 }

@@ -16,6 +16,8 @@ void PlayState::init(Game* game) {
 
     _game->getLevel().loadNextLevel();
 
+    _game->getCamera().setUse(true);
+
     textRect.x = ( _window->getWidth() / 2 ) - ( _player.getWidth() / 2 );
     textRect.y = ( _window->getHeight() / 2 ) - ( _player.getHeight() / 2 );
     textRect.w = _player.getWidth();
@@ -45,20 +47,27 @@ void PlayState::handleEvents(SDL_Event& event) {
 
             case SDLK_DOWN:
                 textRect.y+=_player.getHeight();
+                _game->getLevel().movePlayer(DOWN);
                 break;
-                
+
             case SDLK_LEFT:
                 textRect.x-=_player.getWidth();
+                _game->getLevel().movePlayer(LEFT);
                 break;
-            
+
             case SDLK_RIGHT:
                 textRect.x+=_player.getWidth();
+                _game->getLevel().movePlayer(RIGHT);
                 break;
 
             case SDLK_BACKSPACE:
                 _game->getGameStateManager().changeState(IntroState::instance());
                 break;
-    
+
+            case SDLK_m:
+                //_game->getLevel().loadNextLevel();
+                break;
+
         }
     }
 }

@@ -5,12 +5,8 @@
 
 
 
-Texture::Texture(SDL_Texture* texture) {
-    _texture = texture;
-
-    if (!texture) {
-        _type = NONE;
-    }
+Texture::Texture() {
+   
 }
 
 Texture::Texture(string name) {

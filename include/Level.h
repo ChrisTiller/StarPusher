@@ -34,7 +34,12 @@ private:
 
     void placeFloorTexture(int, int);
 
+    void fixLengths();
+
     void placeGrass();
+
+    char* getChar(int, int, int);
+
 
     std::string _fileName;
 
@@ -42,7 +47,7 @@ private:
     int _width;
     int _height;
 
-    std::vector<std::vector<std::vector<Texture> > > _board;
+    std::vector<std::vector<std::vector<char> > > _board;
 
     int _playerX;
     int _playerY;
@@ -50,6 +55,8 @@ private:
     Game* _game;
 
     std::ifstream _inFile;
+
+    Texture test;
 
 };
 
