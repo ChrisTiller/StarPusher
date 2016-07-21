@@ -226,3 +226,51 @@ void Level::renderLevel() {
 
 
 }
+
+void Level::movePlayer(DIRECTION dir) {
+
+    Texture temp;
+
+    switch (dir) {
+
+        case UP:
+            switch (_board.at(1).at(_playerY-1).at(_playerX).getTextureType() ) {
+                case STAR:
+                    switch (_board.at(1).at(_playerY-2).at(_playerX).getTextureType() ) {
+
+                        case FLOOR:
+                            temp = _board.at(1).at(_playerY-2).at(_playerX);
+                            _board.at(1).at(_playerY-2).at(_playerX) = _board.at(0).at(_playerY-1).at(_playerX);
+                            _board.at(1).at(_playerY-1).at(_playerX) = temp;
+
+                            temp = _board.at(1).at(_playerY-1).at(_playerX);
+                            _board.at(1).at(_playerY-1).at(_playerX) = _board.at(0).at(_playerY).at(_playerX);
+                            _board.at(1).at(_playerY).at(_playerX) = temp;
+
+                            _playerY--;
+                            break;
+                            return;
+                    }
+                    break;
+            }
+            switch (_board.at(0).at(_playerY-1).at(_playerX).getTextureType() ) {
+
+                case FLOOR:
+                    temp = _board.at(1).at(_playerY-1).at(_playerX);
+                    _board.at(1).at(_playerY-1).at(_playerX) = _board.at(1).at(_playerY).at(_playerX);
+                    _board.at(1).at(_playerY).at(_playerX) = temp;
+
+                    _playerY--;
+                    break;
+               
+                return;
+            }
+
+            
+
+            break;
+
+    }
+
+
+}

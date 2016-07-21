@@ -7,6 +7,13 @@
 #include <fstream>
 #include "Texture.h"
 
+enum DIRECTION {
+    UP,
+    DOWN,
+    LEFT,
+    RIGHT
+};
+
 class Game;
 
 class Level {
@@ -20,6 +27,8 @@ public:
     void loadNextLevel();
 
     void renderLevel();
+
+    void movePlayer(DIRECTION);
 
 private:
 

@@ -40,6 +40,7 @@ void PlayState::handleEvents(SDL_Event& event) {
 
             case SDLK_UP:
                 textRect.y-=_player.getHeight();
+                _game->getLevel().movePlayer(UP);
                 break;
 
             case SDLK_DOWN:
