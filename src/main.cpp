@@ -8,7 +8,7 @@ int main(int, char**) {
         return 1;
     }
 
-    Game starPusher("StarPusher", 1280, 768);
+    Game starPusher("Star Pusher", 1280, 768);
 
     starPusher.run();
 

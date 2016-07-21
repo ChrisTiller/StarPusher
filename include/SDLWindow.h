@@ -22,6 +22,7 @@ public:
     
     void clear();
     void placeTexture(Texture*, SDL_Rect*, SDL_Rect*);
+    void placeTexture(Texture*, int, int, SDL_Rect* = NULL);
     void render();
 
     void setDrawColor(int , int , int );    

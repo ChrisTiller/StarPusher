@@ -14,6 +14,8 @@ void PlayState::init(Game* game) {
     _texture.loadTexture("cloud_background.png");
     _player.loadTexture("boy.png");
 
+    _game->getLevel().loadNextLevel();
+
     textRect.x = ( _window->getWidth() / 2 ) - ( _player.getWidth() / 2 );
     textRect.y = ( _window->getHeight() / 2 ) - ( _player.getHeight() / 2 );
     textRect.w = _player.getWidth();
@@ -82,7 +84,9 @@ void PlayState::draw() {
 
     //_window->placeTexture(&_texture, NULL, NULL);
 
-    _window->placeTexture(&_player, NULL, &textRect);
+    _game->getLevel().renderLevel();
+
+    //_window->placeTexture(&_player, NULL, &textRect);
 
     _window->render();
 }

@@ -13,8 +13,9 @@ class Level {
 
 public:
 
-    Level(Game*, const std::string);
-    ~Level();
+    Level(const std::string);
+
+    void setGame(Game*);
 
     void loadNextLevel();
 
@@ -22,7 +23,9 @@ public:
 
 private:
 
-    void placeFloorTextures();
+    void placeFloorTexture(int, int);
+
+    void placeGrass();
 
     std::string _fileName;
 

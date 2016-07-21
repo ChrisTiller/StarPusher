@@ -104,6 +104,19 @@ void SDLWindow::placeTexture(Texture* texture, SDL_Rect* src, SDL_Rect* dst) {
 
 }
 
+void SDLWindow::placeTexture(Texture* texture, int x, int y, SDL_Rect* clip) {
+
+    SDL_Rect dst;
+
+    dst.x = x;
+    dst.y = y;
+    dst.w = texture->getWidth();
+    dst.h = texture->getHeight();
+
+    placeTexture(texture, clip, &dst);
+
+}
+
 void SDLWindow::render() {
 
     if (!_minimized) {
