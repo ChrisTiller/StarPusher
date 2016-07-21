@@ -22,11 +22,11 @@ public:
     bool isRunning();
     void quit();
 
-    void changeState(GameState* newState);
-    void pushState(GameState* newState);
-    void popState();
+    GameStateManager& getGameStateManager();
 
     SDLWindow* getWindowPtr();
+
+    ResourceManager* getResourceManager();
 
 private:
 

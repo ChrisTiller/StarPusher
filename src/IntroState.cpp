@@ -23,7 +23,7 @@ void IntroState::init(Game* game) {
     textRect.w = _texture.getWidth();
     textRect.h = _texture.getHeight();
 
-    _window->setDrawColor(255,255,255);
+    _window->setDrawColor(0x1E,0x09,255);
 
 }
 
@@ -43,7 +43,7 @@ void IntroState::handleEvents(SDL_Event& event) {
         switch( event.key.keysym.sym ) {
 
            case SDLK_RETURN:
-            _game->changeState(PlayState::instance());
+            _game->getGameStateManager().changeState(PlayState::instance());
             break;
             case SDLK_UP:
                 
@@ -58,15 +58,16 @@ void IntroState::handleEvents(SDL_Event& event) {
 void IntroState::update() {
 
 
-    if (_alpha + 5 < 255) {
+    if (_alpha + 2 < 255) {
 
-         _alpha+=5;
+         _alpha+=2;
+
+        _texture.setAlpha(_alpha);
 
     } else {
         _alpha = 254;
     }
 
-     _texture.setAlpha(_alpha);
 
 }
 
@@ -74,7 +75,7 @@ void IntroState::draw() {
 
     _window->clear();
 
-    _window->placeTexture(&_background, NULL, NULL);
+    //_window->placeTexture(&_background, NULL, NULL);
     _window->placeTexture(&_texture, NULL, &textRect);
 
     _window->render();

@@ -70,14 +70,10 @@ SDLWindow* Game::getWindowPtr() {
     return &_window;
 }
 
-void Game::changeState(GameState* newState) {
-    _manager.changeState(newState);
+GameStateManager& Game::getGameStateManager() {
+    return _manager;
 }
 
-void Game::pushState(GameState* newState) {
-    _manager.pushState(newState);
-}
-
-void Game::popState() {
-    _manager.popState();
+ResourceManager* Game::getResourceManager() {
+    return _resourceManager;
 }

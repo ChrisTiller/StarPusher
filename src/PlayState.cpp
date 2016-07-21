@@ -18,6 +18,8 @@ void PlayState::init(Game* game) {
     textRect.y = ( _window->getHeight() / 2 ) - ( _player.getHeight() / 2 );
     textRect.w = _player.getWidth();
     textRect.h = _player.getHeight();
+
+    _window->setDrawColor(0x1E,0x09,255);
 }
 
 void PlayState::cleanup() {
@@ -51,7 +53,7 @@ void PlayState::handleEvents(SDL_Event& event) {
                 break;
 
             case SDLK_BACKSPACE:
-                _game->changeState(IntroState::instance());
+                _game->getGameStateManager().changeState(IntroState::instance());
                 break;
     
         }
@@ -78,7 +80,7 @@ void PlayState::draw() {
 
     _window->clear();
 
-    _window->placeTexture(&_texture, NULL, NULL);
+    //_window->placeTexture(&_texture, NULL, NULL);
 
     _window->placeTexture(&_player, NULL, &textRect);
 
