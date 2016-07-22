@@ -140,3 +140,8 @@ int Camera::getXPos() const {
 int Camera::getYPos() const {
   return _posY;
 }
+
+void Camera::setXYPos(const int x, const int y) {
+  _posX = x;
+  _posY = y;
+}

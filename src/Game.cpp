@@ -1,8 +1,13 @@
 #include "../include/Game.h"
 #include "../include/IntroState.h"
 
+
+const int SCREEN_FPS = 60;
+const int SCREEN_TICKS_PER_SECOND = 1000 / SCREEN_FPS;
+
+
 Game::Game(string name, int width, int height)
-    : _window(name, width, height), _running(true), _level("../resources/levels/test-level.txt") {
+    : _window(name, width, height), _running(true), _level("../resources/levels/levels.txt") {
 
     if ((IMG_Init(IMG_INIT_PNG) & IMG_INIT_PNG) != IMG_INIT_PNG) {
         printf( "SDL_image could not initialize! SDL_image Error: %s\n", IMG_GetError() );
@@ -31,12 +36,16 @@ void Game::run() {
 
     SDL_Event event;
 
+    Uint32 startingTicks;
+    
     while (isRunning()) {
+
+        startingTicks = SDL_GetTicks();
 
         while (SDL_PollEvent(&event) != 0) {
 
             if (event.type == SDL_QUIT) {
-                quit();
+               quit();
             }
 
             switch (event.window.event) {
@@ -62,6 +71,11 @@ void Game::run() {
         _manager.update();
         _camera.update();
         _manager.draw();
+
+        Uint32 endingTicks = SDL_GetTicks() - startingTicks;
+        if ( endingTicks < SCREEN_TICKS_PER_SECOND ){
+            SDL_Delay( SCREEN_TICKS_PER_SECOND - endingTicks);
+        }
     }
 
 }

@@ -16,6 +16,8 @@ public:
 	int getXPos() const;
 	int getYPos() const;
 
+	void setXYPos(const int, const int);
+
 	void setUse(bool);
 
 private:

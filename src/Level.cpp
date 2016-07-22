@@ -3,6 +3,13 @@
 
 Level::Level(const std::string fileName) {
     _fileName = fileName;
+    _EOF = false;
+}
+
+Level::~Level() {
+    if (_inFile.is_open()){
+        _inFile.close();
+    }
 }
 
 void Level::setGame(Game* game) {
@@ -145,32 +152,33 @@ void Level::loadNextLevel() {
                     _width = floorMultiRow.at(0).size();
                     _height = floorMultiRow.size();
 
-
                 }
 
             }
 
+        } else {
+            if (_board.size() > 0) {
+                fixLengths();
+
+                _width = _board.at(0).at(0).size();
+                _height = _board.at(0).size();
+
+                placeFloorTexture(_playerX, _playerY);
+
+                placeGrass();
+
+                for (int i = 0; i < _board.at(0).size(); i++) {
+                    for (int j = 0; j < _board.at(0).at(i).size(); j++) {
+                        printf("%c", *getChar(0, j, i));
+                    }
+                    printf(" %i\n",  _board.at(0).at(i).size());
+                }
+
+                return;
+            }
         }
     }
-
-    _inFile.close();
-
-    fixLengths();
-
-    _width = _board.at(0).at(0).size();
-    _height = _board.at(0).size();
-
-    placeFloorTexture(_playerX, _playerY);
-
-    placeGrass();
-
-    for (int i = 0; i < _board.at(0).size(); i++) {
-        for (int j = 0; j < _board.at(0).at(i).size(); j++) {
-            printf("%c", *getChar(0, j, i));
-        }
-        printf(" %i\n",  _board.at(0).at(i).size());
-    }
-
+    _EOF = true;
 }
 
 void Level::fixLengths() {
@@ -227,7 +235,6 @@ void Level::placeGrass() {
 
     char *temp;
 
-
     for ( int i = 0; i < _height; i++) {
         for ( int j = 0; j < _width; j++) {
 
@@ -242,10 +249,14 @@ void Level::placeGrass() {
 
 void Level::renderLevel() {
 
+    if (_EOF) {
+        return;
+    }
+
     //int tileWidth = _board.at(0).at(0).at(0).getWidth();
     int tileWidth = 50;
     //int tileHeight = _board.at(0).at(0).at(0).getHeight();
-    int tileHeight = 40;
+    int tileHeight = 41;
 
     int boardWidth = _board.at(0).at(0).size() * tileWidth;
     int boardHeight = _board.at(0).size() * tileHeight;
@@ -308,19 +319,14 @@ void Level::renderLevel() {
                         currentTexture.loadTexture("Star.png");
                         _game->getWindowPtr()->placeTexture(&currentTexture, startX + xOffset - cameraX, startY + yOffset - cameraY);
                     break;
+                case '+':
+                        currentTexture.loadTexture("RedSelector.png");
+                        _game->getWindowPtr()->placeTexture(&currentTexture, startX + xOffset - cameraX, startY + yOffset - cameraY);
+                        currentTexture.loadTexture("boy.png");
+                        _game->getWindowPtr()->placeTexture(&currentTexture, startX + xOffset - cameraX, startY + yOffset - cameraY);
+                    break;
             }
 
-            /*if ( ( currentTexture = &floorMap.at(i).at(j) )->getTextureType() != NONE) {
-
-                _game->getWindowPtr()->placeTexture(currentTexture, startX + xOffset, startY + yOffset);
-
-            }
-
-            if ( ( currentTexture = &playerMap.at(i).at(j) )->getTextureType() != NONE) {
-
-                _game->getWindowPtr()->placeTexture(currentTexture, startX + xOffset, startY + yOffset);
-
-            }*/
 
             xOffset += tileWidth;
         }
@@ -334,230 +340,203 @@ void Level::renderLevel() {
 
 void Level::movePlayer(DIRECTION dir) {
 
-    char* temp;
+
+    int x, y, x2, y2;
 
     switch (dir) {
 
         case UP:
 
-            if (*getChar(0, _playerX, _playerY-1) == '#') {
-                return;
-            }
+          x = _playerX;
+          y = _playerY - 1;
+          x2 = _playerX;
+          y2 = _playerY - 2;
 
-            if (*(getChar(1, _playerX, _playerY - 1)) == ' ') {
-                *getChar(1, _playerX, _playerY - 1) = '@';
-                *getChar(1, _playerX, _playerY) = ' ';
-                _playerY--;
-                return;
-            }
-
-            if (*(temp = getChar(1, _playerX, _playerY - 1)) == '$') {
-
-                char* temp2;
-
-                 if (*(getChar(1, _playerX, _playerY - 2)) == ' ') {
-                    *getChar(1, _playerX, _playerY - 2) = '$';
-                    *getChar(1, _playerX, _playerY-1) = '@';
-
-                    *getChar(1, _playerX, _playerY) = ' ';
-
-                    _playerY--;
-
-                    return;
-
-                 } else if (*(getChar(1, _playerX, _playerY - 2)) == '.') {
-                    *getChar(1, _playerX, _playerY - 2) = '*';
-                    *getChar(1, _playerX, _playerY-1) = '@';
-
-                    *getChar(1, _playerX, _playerY) = ' ';
-
-                    _playerY--;
-
-                    return;
-
-                 }
-
-            }
-
-            break;
+          break;
 
         case DOWN:
 
-            if (*getChar(0, _playerX, _playerY+1) == '#') {
-                return;
-            }
+          x = _playerX;
+          y = _playerY + 1;
+          x2 = _playerX;
+          y2 = _playerY + 2;
 
-            if (*(getChar(1, _playerX, _playerY + 1)) == ' ') {
-                *getChar(1, _playerX, _playerY + 1) = '@';
-                *getChar(1, _playerX, _playerY) = ' ';
-                _playerY++;
-                return;
-            }
-
-            if (*(temp = getChar(1, _playerX, _playerY + 1)) == '$') {
-
-                char* temp2;
-
-                 if (*(getChar(1, _playerX, _playerY + 2)) == ' ') {
-                    *getChar(1, _playerX, _playerY + 2) = '$';
-                    *getChar(1, _playerX, _playerY+1) = '@';
-
-                    *getChar(1, _playerX, _playerY) = ' ';
-
-                    _playerY--;
-
-                    return;
-
-                 } else if (*(getChar(1, _playerX, _playerY + 2)) == '.') {
-                    *getChar(1, _playerX, _playerY + 2) = '*';
-                    *getChar(1, _playerX, _playerY+1) = '@';
-
-                    *getChar(1, _playerX, _playerY) = ' ';
-
-                    _playerY++;
-
-                    return;
-
-                 }
-
-            }
-
-            break;
+          break;
 
         case LEFT:
 
-            if (*getChar(0, _playerX-1, _playerY) == '#') {
-                return;
-            }
+          x = _playerX - 1;
+          y = _playerY;
+          x2 = _playerX - 2;
+          y2 = _playerY;
 
-            if (*(getChar(1, _playerX - 1, _playerY)) == ' ') {
-                *getChar(1, _playerX - 1, _playerY) = '@';
-                *getChar(1, _playerX, _playerY) = ' ';
-                _playerX--;
-                return;
-            }
-
-            if (*(temp = getChar(1, _playerX - 1, _playerY)) == '$') {
-
-                char* temp2;
-
-                 if (*(getChar(1, _playerX - 2, _playerY)) == ' ') {
-                    *getChar(1, _playerX - 2, _playerY ) = '$';
-                    *getChar(1, _playerX - 1, _playerY) = '@';
-
-                    *getChar(1, _playerX, _playerY) = ' ';
-
-                    _playerX--;
-
-                    return;
-
-                 } else if (*(getChar(1, _playerX - 2, _playerY)) == '.') {
-                    *getChar(1, _playerX - 2, _playerY) = '*';
-                    *getChar(1, _playerX - 1, _playerY) = '@';
-
-                    *getChar(1, _playerX, _playerY) = ' ';
-
-                    _playerX--;
-
-                    return;
-
-                 }
-
-            }
-
-            break;
+          break;
 
         case RIGHT:
 
-            if (*getChar(0, _playerX+1, _playerY) == '#') {
-                return;
-            }
+          x = _playerX + 1;
+          y = _playerY;
+          x2 = _playerX + 2;
+          y2 = _playerY;
 
-            if (*(getChar(1, _playerX + 1, _playerY)) == ' ') {
-                *getChar(1, _playerX + 1, _playerY) = '@';
-                *getChar(1, _playerX, _playerY) = ' ';
-                _playerX++;
-                return;
-            }
-
-            if (*(temp = getChar(1, _playerX + 1, _playerY)) == '$') {
-
-                char* temp2;
-
-                 if (*(getChar(1, _playerX + 2, _playerY)) == ' ') {
-                    *getChar(1, _playerX + 2, _playerY ) = '$';
-                    *getChar(1, _playerX + 1, _playerY) = '@';
-
-                    *getChar(1, _playerX, _playerY) = ' ';
-
-                    _playerX++;
-
-                    return;
-
-                 } else if (*(getChar(1, _playerX + 2, _playerY)) == '.') {
-                    *getChar(1, _playerX + 2, _playerY) = '*';
-                    *getChar(1, _playerX + 1, _playerY) = '@';
-
-                    *getChar(1, _playerX, _playerY) = ' ';
-
-                    _playerX++;
-
-                    return;
-
-                 }
-
-            }
-
-            break;
+          break;
 
     }
 
-    /*
-    switch (dir) {
+    if (*getChar(0, x, y) == '#') {
+        return;
+    }
 
-        case UP:
-            switch (_board.at(1).at(_playerY-1).at(_playerX).getTextureType() ) {
-                case STAR:
-                    switch (_board.at(1).at(_playerY-2).at(_playerX).getTextureType() ) {
+    if (*getChar(1, _playerX, _playerY) == '+') {
 
-                        case NONE:
-                            temp = _board.at(1).at(_playerY-2).at(_playerX);
-                            _board.at(1).at(_playerY-2).at(_playerX) = _board.at(0).at(_playerY-1).at(_playerX);
-                            _board.at(1).at(_playerY-1).at(_playerX) = temp;
+        if (*getChar(1, x, y) == ' ') {
+            *getChar(1, x, y ) = '@';
+            *getChar(1, _playerX, _playerY) = '.';
 
-                            temp = _board.at(1).at(_playerY-1).at(_playerX);
-                            _board.at(1).at(_playerY-1).at(_playerX) = _board.at(0).at(_playerY).at(_playerX);
-                            _board.at(1).at(_playerY).at(_playerX) = temp;
+            movePlayerPos(dir);
+        }
 
-                            _playerY--;
-                            break;
-                            return;
-                    }
-                    break;
-            }
-            switch (_board.at(0).at(_playerY-1).at(_playerX).getTextureType() ) {
+        if (*getChar(1, x, y) == '*') {
 
-                case FLOOR:
-                    temp = _board.at(1).at(_playerY-1).at(_playerX);
-                    _board.at(1).at(_playerY-1).at(_playerX) = _board.at(1).at(_playerY).at(_playerX);
-                    _board.at(1).at(_playerY).at(_playerX) = temp;
-
-                    _playerY--;
-                    break;
-
-                return;
+            if (*getChar(1, x2, y2) == '#') {
+              return;
             }
 
+            if (*getChar(1, x2, y2) == '*') {
+              return;
+            }
+
+            if (*getChar(1, x2, y2) == '$') {
+              return;
+            }
+
+            if (*getChar(1, x2, y2) == ' ') {
+
+                *getChar(1, x2, y2) == '$';
+                *getChar(1, x, y) == '+';
+                *getChar(1, _playerX, _playerY) == '.';
+
+                movePlayerPos(dir);
+
+            }
+
+        }
+
+        if (*getChar(1, x, y) == '$') {
+
+            if (*getChar(0, x2, y2) == '#') {
+              return;
+            }
+
+            if (*getChar(1, x2, y2) == '$') {
+              return;
+            }
+
+            if (*getChar(1, x2, y2) == ' ') {
+                *getChar(1, x2, y2) = '$';
+                *getChar(1, x, y) = '@';
+                *getChar(1, _playerX, _playerY) = '.';
+
+                movePlayerPos(dir);
+            }
+
+            if (*getChar(1, x2, y2) == '.') {
+              *getChar(1, x2, y2) == '*';
+              *getChar(1, x, y) == '@';
+              *getChar(1, _playerX, _playerY) = '.';
+
+              movePlayerPos(dir);
+            }
 
 
-            break;
+
+        }
 
     }
-    */
 
+    if (*(getChar(1, x, y )) == ' ') {
+        *getChar(1, x, y ) = '@';
+        *getChar(1, _playerX, _playerY) = ' ';
+        movePlayerPos(dir);
+        return;
+    }
 
+    if (*(getChar(1, x, y )) == '.') {
+        *getChar(1, x, y ) = '+';
+        *getChar(1, _playerX, _playerY) = ' ';
+        movePlayerPos(dir);
+        return;
+    }
+
+    if (*getChar(1, x, y) == '*') {
+
+      if (*getChar(0, x2, y2) == '#') {
+        return;
+      }
+
+      if (*getChar(1, x2, y2) == ' ') {
+        *getChar(1, x2, y2) = '$';
+        *getChar(1, x, y) = '+';
+        *getChar(1, _playerX, _playerY) = ' ';
+
+        movePlayerPos(dir);
+      }
+
+    }
+
+    if (*(getChar(1, x, y )) == '$') {
+
+        if (*getChar(0, x2, y2) == '#') {
+            return;
+        }
+
+        if (*getChar(1, x2, y2) == '$') {
+          return;
+        }
+
+        if (*(getChar(1, x2, y2)) == ' ') {
+            *getChar(1, x2, y2) = '$';
+            *getChar(1, x, y) = '@';
+
+            *getChar(1, _playerX, _playerY) = ' ';
+
+            movePlayerPos(dir);
+
+            return;
+
+        } else if (*(getChar(1, x2, y2)) == '.') {
+            *getChar(1, x2, y2) = '*';
+            *getChar(1, x, y) = '@';
+
+            *getChar(1, _playerX, _playerY) = ' ';
+
+            movePlayerPos(dir);
+
+            return;
+        }
+    }
 }
 
 char* Level::getChar(int board, int x, int y) {
     return &_board.at(board).at(y).at(x);
+}
+
+void Level::movePlayerPos(DIRECTION dir) {
+
+  switch (dir) {
+
+    case UP:
+        _playerY--;
+      break;
+    case DOWN:
+      _playerY++;
+      break;
+    case LEFT:
+      _playerX--;
+      break;
+    case RIGHT:
+      _playerX++;
+      break;
+  }
+
 }

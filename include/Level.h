@@ -21,6 +21,7 @@ class Level {
 public:
 
     Level(const std::string);
+    ~Level();
 
     void setGame(Game*);
 
@@ -40,6 +41,8 @@ private:
 
     char* getChar(int, int, int);
 
+    void movePlayerPos(DIRECTION);
+
 
     std::string _fileName;
 
@@ -51,6 +54,8 @@ private:
 
     int _playerX;
     int _playerY;
+
+    bool _EOF;
 
     Game* _game;
 

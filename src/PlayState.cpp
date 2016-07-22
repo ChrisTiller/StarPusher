@@ -23,7 +23,8 @@ void PlayState::init(Game* game) {
     textRect.w = _player.getWidth();
     textRect.h = _player.getHeight();
 
-    _window->setDrawColor(0x1E,0x09,255);
+    //_window->setDrawColor(0x1E,0x09,255);
+    _window->setDrawColor(0,0,0);
 }
 
 void PlayState::cleanup() {
@@ -64,8 +65,12 @@ void PlayState::handleEvents(SDL_Event& event) {
                 _game->getGameStateManager().changeState(IntroState::instance());
                 break;
 
+            case SDLK_c:
+                _game->getCamera().setXYPos(0,0);
+                break;
+
             case SDLK_m:
-                //_game->getLevel().loadNextLevel();
+                _game->getLevel().loadNextLevel();
                 break;
 
         }
