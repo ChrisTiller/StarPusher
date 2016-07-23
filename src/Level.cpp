@@ -1,9 +1,14 @@
 #include "../include/Level.h"
 #include "../include/Game.h"
 
+#include <iostream>
+#include <algorithm>
+
 Level::Level(const std::string fileName) {
     _fileName = fileName;
     _EOF = false;
+
+    _logger.setFileName("../logs/log.txt");
 }
 
 Level::~Level() {
@@ -17,7 +22,6 @@ void Level::setGame(Game* game) {
 }
 
 void Level::loadNextLevel() {
-
 
     if (!_inFile.is_open()) {
 
@@ -34,12 +38,14 @@ void Level::loadNextLevel() {
     int lineNumber = 0;
 
     _board.clear();
-
+    _goals.clear();
+    _stars.clear();
 
     std::vector<char> floorRow;
-    std::vector<char> starRow;
     std::vector<std::vector<char> > floorMultiRow;
-    std::vector<std::vector<char> > starMultiRow;
+
+    Point star;
+    Point goal;
 
     while ( getline (_inFile, line) ) {
 
@@ -50,95 +56,55 @@ void Level::loadNextLevel() {
 
                 for (int i = 0; i < line.length() ; i++) {
 
-                    /*Texture temp;
-                    Texture starTemp;
-
                     switch (line[i]) {
 
-                        case ' ':
-                            temp.loadTexture("");
-                            floorRow.push_back(temp);
-                            starTemp.setTextureType(NONE);
-                            starRow.push_back(starTemp);
-                            break;
-                        case '#':
-                            starTemp.loadTexture("");
-                            starTemp.setTextureType(NONE);
-                            temp.loadTexture("Wood_Block_Tall.png");
-                            temp.setTextureType(WALL);
+                            case ' ':
+                            case '#':
+                                floorRow.push_back(line[i]);
+                                break;
+                            case '$':
+                                star.x = i;
+                                star.y = lineNumber;
+                                _stars.push_back(star);
+                                floorRow.push_back(' ');
+                                break;
+                            case '.':
+                                goal.x = i;
+                                goal.y = lineNumber;
+                                _goals.push_back(goal);
+                                floorRow.push_back(' ');
+                                break;
+                            case '+':
+                                goal.x = i;
+                                goal.y = lineNumber;
+                                _goals.push_back(goal);
+                                floorRow.push_back(' ');
+                                _playerX = i;
+                                _playerY = lineNumber;
+                                break;
+                            case '*':
+                                goal.x = i;
+                                goal.y = lineNumber;
+                                _goals.push_back(goal);
 
-                            floorRow.push_back(temp);
-                            starRow.push_back(starTemp);
+                                star.x = i;
+                                star.y = lineNumber;
+                                _stars.push_back(star);
 
-                            break;
-
-                        case '$':
-                            temp.loadTexture("");
-                            temp.setTextureType(NONE);
-                            floorRow.push_back(temp);
-
-                            starTemp.loadTexture("Star.png");
-                            starTemp.setTextureType(STAR);
-                            starRow.push_back(starTemp);
-
-                            break;
-
-                        case '.':
-                            temp.loadTexture("");
-                            temp.setTextureType(NONE);
-                            floorRow.push_back(temp);
-
-                            starTemp.loadTexture("RedSelector.png");
-                            starTemp.setTextureType(OFFGOAL);
-                            starRow.push_back(starTemp);
-
-                            break;
-
-                        case '@':
-                            _playerX = i;
-                            _playerY = lineNumber;
-
-                            temp.loadTexture("");
-                            temp.setTextureType(NONE);
-                            floorRow.push_back(temp);
-
-                            starTemp.loadTexture("boy.png");
-                            starTemp.setTextureType(PLAYER);
-                            starRow.push_back(starTemp);
-
-                            break;
-
-                    }*/
-
-                    switch (line[i]) {
-
-                        case ' ':
-                        case '#':
-                            floorRow.push_back(line[i]);
-                            starRow.push_back(' ');
-                            break;
-                        case '$':
-                        case '.':
-                            floorRow.push_back(' ');
-                            starRow.push_back(line[i]);
-                            break;
-                        case '@':
-                            floorRow.push_back(' ');
-                            starRow.push_back(line[i]);
-                            _playerX = i;
-                            _playerY = lineNumber;
-                            break;
-
-
+                                floorRow.push_back(' ');
+                                break;
+                            case '@':
+                                floorRow.push_back(' ');
+                                _playerX = i;
+                                _playerY = lineNumber;
+                                break;
                     }
 
                 }
 
                 floorMultiRow.push_back(floorRow);
-                starMultiRow.push_back(starRow);
 
                 floorRow.clear();
-                starRow.clear();
 
                 lineNumber++;
 
@@ -147,37 +113,47 @@ void Level::loadNextLevel() {
                 if (floorMultiRow.size() > 0) {
 
                     _board.push_back(floorMultiRow);
-                    _board.push_back(starMultiRow);
-
-                    _width = floorMultiRow.at(0).size();
-                    _height = floorMultiRow.size();
-
                 }
-
             }
-
         } else {
             if (_board.size() > 0) {
+
+
                 fixLengths();
 
                 _width = _board.at(0).at(0).size();
                 _height = _board.at(0).size();
 
+
                 placeFloorTexture(_playerX, _playerY);
 
                 placeGrass();
 
-                for (int i = 0; i < _board.at(0).size(); i++) {
-                    for (int j = 0; j < _board.at(0).at(i).size(); j++) {
-                        printf("%c", *getChar(0, j, i));
+                *getChar(0, _playerX, _playerY) = '@';
+
+                for (int i = 0; i < _goals.size(); i++) {
+                    Point p = _goals.at(i);
+                    if (p.x == _playerX && p.y == _playerY) {
+                        *getChar(0, p.x, p.y) = '+';
+                    } else {
+                        *getChar(0, p.x, p.y) = '.';
                     }
-                    printf(" %i\n",  _board.at(0).at(i).size());
                 }
 
+                for (int i = 0; i < _stars.size(); i++) {
+                    Point p = _stars.at(i);
+
+                    if ( *(getChar(0, p.x, p.y)) == '.') {
+                        *getChar(0, p.x, p.y) = '*';
+                    } else {
+                        *getChar(0, p.x, p.y) = '$';
+                    }
+                }
                 return;
             }
         }
     }
+
     _EOF = true;
 }
 
@@ -190,7 +166,6 @@ void Level::fixLengths() {
         if (_board.at(0).at(i).size() > biggestNum) {
             biggestNum = _board.at(0).at(i).size();
         }
-
     }
 
     for (int i = 0; i < _board.at(0).size(); i++) {
@@ -198,15 +173,7 @@ void Level::fixLengths() {
         while (_board.at(0).at(i).size() < biggestNum) {
             _board.at(0).at(i).push_back(' ');
         }
-
-        while (_board.at(1).at(i).size() < biggestNum) {
-            _board.at(1).at(i).push_back(' ');
-        }
-
     }
-
-
-
 }
 
 void Level::placeFloorTexture(int startX, int startY) {
@@ -217,18 +184,19 @@ void Level::placeFloorTexture(int startX, int startY) {
         return;
     }
 
-    if ( *( temp = &_board.at(0).at(startY).at(startX) ) == ' ' ) {
+    if (startX < 0 || startY < 0) {
+        return;
+    }
+
+    if (*(temp = &_board.at(0).at(startY).at(startX)) == ' ') {
+
         *temp = 'F';
 
         placeFloorTexture(startX - 1, startY);
         placeFloorTexture(startX, startY - 1);
         placeFloorTexture(startX + 1, startY);
         placeFloorTexture(startX, startY + 1);
-
-    } else {
-        return;
     }
-
 }
 
 void Level::placeGrass() {
@@ -241,10 +209,8 @@ void Level::placeGrass() {
             if ( *( temp = &_board.at(0).at(i).at(j) ) == ' ') {
                 *temp = 'G';
             }
-
         }
     }
-
 }
 
 void Level::renderLevel() {
@@ -256,7 +222,7 @@ void Level::renderLevel() {
     //int tileWidth = _board.at(0).at(0).at(0).getWidth();
     int tileWidth = 50;
     //int tileHeight = _board.at(0).at(0).at(0).getHeight();
-    int tileHeight = 41;
+    int tileHeight = 40;
 
     int boardWidth = _board.at(0).at(0).size() * tileWidth;
     int boardHeight = _board.at(0).size() * tileHeight;
@@ -268,7 +234,6 @@ void Level::renderLevel() {
     int yOffset = 0;
 
     std::vector<std::vector<char> > floorMap = _board.at(0);
-    std::vector<std::vector<char> > playerMap = _board.at(1);
 
     Texture currentTexture;
 
@@ -293,49 +258,52 @@ void Level::renderLevel() {
                         _game->getWindowPtr()->placeTexture(&currentTexture, startX + xOffset - cameraX, startY + yOffset - cameraY);
                     break;
                 case '#':
-                        currentTexture.loadTexture("Wood_Block_Tall.png");
-                        _game->getWindowPtr()->placeTexture(&currentTexture, startX + xOffset - cameraX, startY + yOffset - cameraY);
+
+
+                    currentTexture.loadTexture("Wood_Block_Tall.png");
+                    _game->getWindowPtr()->placeTexture(&currentTexture, startX + xOffset - cameraX, startY + yOffset - cameraY);
                     break;
 
-            }
-
-            switch (playerMap.at(i).at(j)) {
 
                 case '.':
+                        currentTexture.loadTexture("Plain_Block.png");
+                        _game->getWindowPtr()->placeTexture(&currentTexture, startX + xOffset - cameraX, startY + yOffset - cameraY);
                         currentTexture.loadTexture("RedSelector.png");
                         _game->getWindowPtr()->placeTexture(&currentTexture, startX + xOffset - cameraX, startY + yOffset - cameraY);
-                    break;
+                        break;
                 case '$':
+                        currentTexture.loadTexture("Plain_Block.png");
+                        _game->getWindowPtr()->placeTexture(&currentTexture, startX + xOffset - cameraX, startY + yOffset - cameraY);
                         currentTexture.loadTexture("Star.png");
                         _game->getWindowPtr()->placeTexture(&currentTexture, startX + xOffset - cameraX, startY + yOffset - cameraY);
-                    break;
+                        break;
                 case '@':
+                        currentTexture.loadTexture("Plain_Block.png");
+                        _game->getWindowPtr()->placeTexture(&currentTexture, startX + xOffset - cameraX, startY + yOffset - cameraY);
                         currentTexture.loadTexture("boy.png");
                         _game->getWindowPtr()->placeTexture(&currentTexture, startX + xOffset - cameraX, startY + yOffset - cameraY);
-                    break;
+                        break;
                 case '*':
+                        currentTexture.loadTexture("Plain_Block.png");
+                        _game->getWindowPtr()->placeTexture(&currentTexture, startX + xOffset - cameraX, startY + yOffset - cameraY);
                         currentTexture.loadTexture("Selector.png");
                         _game->getWindowPtr()->placeTexture(&currentTexture, startX + xOffset - cameraX, startY + yOffset - cameraY);
                         currentTexture.loadTexture("Star.png");
                         _game->getWindowPtr()->placeTexture(&currentTexture, startX + xOffset - cameraX, startY + yOffset - cameraY);
                     break;
                 case '+':
+                        currentTexture.loadTexture("Plain_Block.png");
+                        _game->getWindowPtr()->placeTexture(&currentTexture, startX + xOffset - cameraX, startY + yOffset - cameraY);
                         currentTexture.loadTexture("RedSelector.png");
                         _game->getWindowPtr()->placeTexture(&currentTexture, startX + xOffset - cameraX, startY + yOffset - cameraY);
                         currentTexture.loadTexture("boy.png");
                         _game->getWindowPtr()->placeTexture(&currentTexture, startX + xOffset - cameraX, startY + yOffset - cameraY);
                     break;
             }
-
-
             xOffset += tileWidth;
         }
-
         yOffset += tileHeight;
-
     }
-
-
 }
 
 void Level::movePlayer(DIRECTION dir) {
@@ -380,140 +348,10 @@ void Level::movePlayer(DIRECTION dir) {
           y2 = _playerY;
 
           break;
-
     }
 
-    if (*getChar(0, x, y) == '#') {
-        return;
-    }
-
-    if (*getChar(1, _playerX, _playerY) == '+') {
-
-        if (*getChar(1, x, y) == ' ') {
-            *getChar(1, x, y ) = '@';
-            *getChar(1, _playerX, _playerY) = '.';
-
-            movePlayerPos(dir);
-        }
-
-        if (*getChar(1, x, y) == '*') {
-
-            if (*getChar(1, x2, y2) == '#') {
-              return;
-            }
-
-            if (*getChar(1, x2, y2) == '*') {
-              return;
-            }
-
-            if (*getChar(1, x2, y2) == '$') {
-              return;
-            }
-
-            if (*getChar(1, x2, y2) == ' ') {
-
-                *getChar(1, x2, y2) == '$';
-                *getChar(1, x, y) == '+';
-                *getChar(1, _playerX, _playerY) == '.';
-
-                movePlayerPos(dir);
-
-            }
-
-        }
-
-        if (*getChar(1, x, y) == '$') {
-
-            if (*getChar(0, x2, y2) == '#') {
-              return;
-            }
-
-            if (*getChar(1, x2, y2) == '$') {
-              return;
-            }
-
-            if (*getChar(1, x2, y2) == ' ') {
-                *getChar(1, x2, y2) = '$';
-                *getChar(1, x, y) = '@';
-                *getChar(1, _playerX, _playerY) = '.';
-
-                movePlayerPos(dir);
-            }
-
-            if (*getChar(1, x2, y2) == '.') {
-              *getChar(1, x2, y2) == '*';
-              *getChar(1, x, y) == '@';
-              *getChar(1, _playerX, _playerY) = '.';
-
-              movePlayerPos(dir);
-            }
-
-
-
-        }
-
-    }
-
-    if (*(getChar(1, x, y )) == ' ') {
-        *getChar(1, x, y ) = '@';
-        *getChar(1, _playerX, _playerY) = ' ';
-        movePlayerPos(dir);
-        return;
-    }
-
-    if (*(getChar(1, x, y )) == '.') {
-        *getChar(1, x, y ) = '+';
-        *getChar(1, _playerX, _playerY) = ' ';
-        movePlayerPos(dir);
-        return;
-    }
-
-    if (*getChar(1, x, y) == '*') {
-
-      if (*getChar(0, x2, y2) == '#') {
-        return;
-      }
-
-      if (*getChar(1, x2, y2) == ' ') {
-        *getChar(1, x2, y2) = '$';
-        *getChar(1, x, y) = '+';
-        *getChar(1, _playerX, _playerY) = ' ';
-
-        movePlayerPos(dir);
-      }
-
-    }
-
-    if (*(getChar(1, x, y )) == '$') {
-
-        if (*getChar(0, x2, y2) == '#') {
-            return;
-        }
-
-        if (*getChar(1, x2, y2) == '$') {
-          return;
-        }
-
-        if (*(getChar(1, x2, y2)) == ' ') {
-            *getChar(1, x2, y2) = '$';
-            *getChar(1, x, y) = '@';
-
-            *getChar(1, _playerX, _playerY) = ' ';
-
-            movePlayerPos(dir);
-
-            return;
-
-        } else if (*(getChar(1, x2, y2)) == '.') {
-            *getChar(1, x2, y2) = '*';
-            *getChar(1, x, y) = '@';
-
-            *getChar(1, _playerX, _playerY) = ' ';
-
-            movePlayerPos(dir);
-
-            return;
-        }
+    if (movePlayer(x, y, x2, y2)) {
+        updatePlayerPos(dir);
     }
 }
 
@@ -521,7 +359,44 @@ char* Level::getChar(int board, int x, int y) {
     return &_board.at(board).at(y).at(x);
 }
 
-void Level::movePlayerPos(DIRECTION dir) {
+void Level::setChar(int board, int x, int y, CHAR_TYPE type) {
+
+    if (x < 0 || y < 0 || x >= _width || y >= _height) {
+        return;
+    }
+
+    switch (type)  {
+        case WALL:
+            _board.at(board).at(y).at(x) = '#';
+            return;
+        case PLAYER:
+            _board.at(board).at(y).at(x) = '@';
+            return;
+        case STAR:
+            _board.at(board).at(y).at(x) = '$';
+            return;
+        case GOAL_WITHOUT_STAR:
+            _board.at(board).at(y).at(x) = '.';
+            return;
+        case GOAL_WITH_STAR:
+            _board.at(board).at(y).at(x) = '*';
+            return;
+        case PLAYER_ON_GOAL:
+            _board.at(board).at(y).at(x) = '+';
+            return;
+        case FLOOR:
+            _board.at(board).at(y).at(x) = 'F';
+            return;
+        case GRASS:
+            _board.at(board).at(y).at(x) = 'G';
+            return;
+        case NONE:
+            _board.at(board).at(y).at(x) = ' ';
+            return;
+    }
+}
+
+void Level::updatePlayerPos(DIRECTION dir) {
 
   switch (dir) {
 
@@ -538,5 +413,147 @@ void Level::movePlayerPos(DIRECTION dir) {
       _playerX++;
       break;
   }
+}
 
+CHAR_TYPE Level::getCharType(int x, int y) {
+
+    if (x < 0 || y < 0 || x >= _width || y >= _height) {
+        return NONE;
+    }
+
+    switch (*getChar(0, x, y)) {
+
+        case '#':
+            return WALL;
+        case ' ':
+            return NONE;
+        case 'G':
+            return GRASS;
+        case '@':
+            return PLAYER;
+        case '$':
+            return STAR;
+        case '.':
+            return GOAL_WITHOUT_STAR;
+        case '*':
+            return GOAL_WITH_STAR;
+        case '+':
+            return PLAYER_ON_GOAL;
+        case 'F':
+            return FLOOR;
+    }
+}
+
+bool Level::movePlayer(int x, int y, int x2, int y2) {
+
+    if (getCharType(x, y) == WALL) {
+        return false;
+    }
+
+    switch (getCharType(_playerX, _playerY)) {
+
+        case PLAYER:
+
+            switch (getCharType(x, y)) {
+
+                case FLOOR:
+                    setChar(0, x, y, PLAYER);
+                    setChar(0, _playerX, _playerY, FLOOR);
+                    return true;
+
+                case STAR:
+
+                    if (moveStar(x, y, x2, y2)) {
+                        setChar(0, x, y, PLAYER);
+                        setChar(0, _playerX, _playerY, FLOOR);
+                        return true;
+                    } else {
+                        return false;
+                    }
+
+                case GOAL_WITH_STAR:
+
+                    if (moveStar(x, y, x2, y2)) {
+
+                        setChar(0, x, y, PLAYER_ON_GOAL);
+                        setChar(0, _playerX, _playerY, FLOOR);
+
+                        return true;
+                    } else {
+                        return false;
+                    }
+
+                case GOAL_WITHOUT_STAR:
+
+                    setChar(0, x, y, PLAYER_ON_GOAL);
+                    setChar(0, _playerX, _playerY, FLOOR);
+
+                    return true;
+
+            }
+
+            break;
+
+        case PLAYER_ON_GOAL:
+
+            switch (getCharType(x, y)) {
+
+                case FLOOR:
+
+                    setChar(0, x, y, PLAYER);
+                    setChar(0, _playerX, _playerY, GOAL_WITHOUT_STAR);
+
+                    return true;
+
+                case STAR:
+
+                    if (moveStar(x, y, x2, y2)) {
+
+                        setChar(0, x, y, PLAYER);
+                        setChar(0, _playerX, _playerY, GOAL_WITHOUT_STAR);
+
+                        return true;
+                    } else {
+                        return false;
+                    }
+
+                case GOAL_WITHOUT_STAR:
+
+                    setChar(0, x, y, PLAYER_ON_GOAL);
+                    setChar(0, _playerX, _playerY, GOAL_WITHOUT_STAR);
+
+                    return true;
+
+                case GOAL_WITH_STAR:
+
+                    if (moveStar(x, y, x2, y2)) {
+
+                        setChar(0, x, y, PLAYER_ON_GOAL);
+                        setChar(0, _playerX, _playerY, GOAL_WITHOUT_STAR);
+
+                        return true;
+                    } else {
+                        return false;
+                    }
+            }
+            break;
+    }
+}
+
+bool Level::moveStar(int x, int y, int x2, int y2) {
+
+    if (getCharType(x2, y2) == WALL || getCharType(x2, y2) == STAR || getCharType(x2, y2) == GOAL_WITH_STAR) {
+        return false;
+    }
+
+    switch (getCharType(x2, y2)) {
+
+        case FLOOR:
+            setChar(0, x2, y2, STAR);
+            return true;
+
+        case GOAL_WITHOUT_STAR:
+            setChar(0, x2, y2, GOAL_WITH_STAR);
+            return true;
+    }
 }

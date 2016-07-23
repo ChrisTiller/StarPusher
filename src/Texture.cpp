@@ -6,7 +6,7 @@
 
 
 Texture::Texture() {
-   
+
 }
 
 Texture::Texture(string name) {
@@ -20,16 +20,13 @@ SDL_Texture* Texture::getTexture() const {
     return _texture;
 }
 
-TEXTURE_TYPE Texture::getTextureType() const {
-    return _type;
-}
 
 void Texture::setAlpha(Uint8 alpha) {
     SDL_SetTextureAlphaMod(_texture, alpha);
 }
 
 bool Texture::loadTexture(string name) {
-    
+
     if (name == "") {
         _texture = NULL;
         return true;
@@ -47,10 +44,6 @@ bool Texture::loadTexture(string name) {
     _ratio = (float)_width / _height;
 
     return true;
-}
-
-void Texture::setTextureType(TEXTURE_TYPE type) {
-    _type = type;
 }
 
 int Texture::getWidth() const {

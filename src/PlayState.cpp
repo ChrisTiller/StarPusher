@@ -3,9 +3,12 @@
 #include "../include/Game.h"
 #include "../include/IntroState.h"
 
+#include <iostream>
+
 PlayState* PlayState::_playState = NULL;
 
 void PlayState::init(Game* game) {
+
 
     _game = game;
 

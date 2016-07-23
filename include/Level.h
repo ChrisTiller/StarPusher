@@ -6,6 +6,26 @@
 #include <vector>
 #include <fstream>
 #include "Texture.h"
+#include "Log.h"
+
+using std::vector;
+
+struct Point {
+    int x;
+    int y;
+};
+
+enum CHAR_TYPE {
+    WALL,
+    STAR,
+    PLAYER,
+    PLAYER_ON_GOAL,
+    GOAL_WITH_STAR,
+    GOAL_WITHOUT_STAR,
+    FLOOR,
+    GRASS,
+    NONE
+};
 
 enum DIRECTION {
     UP,
@@ -40,9 +60,14 @@ private:
     void placeGrass();
 
     char* getChar(int, int, int);
+    void setChar(int, int, int, CHAR_TYPE);
 
-    void movePlayerPos(DIRECTION);
+    void updatePlayerPos(DIRECTION);
 
+    CHAR_TYPE getCharType(int,int);
+
+    bool movePlayer(int, int, int, int);
+    bool moveStar(int, int, int, int);
 
     std::string _fileName;
 
@@ -50,7 +75,10 @@ private:
     int _width;
     int _height;
 
-    std::vector<std::vector<std::vector<char> > > _board;
+    vector<vector<vector<char> > > _board;
+
+    vector<Point> _stars;
+    vector<Point> _goals;
 
     int _playerX;
     int _playerY;
@@ -61,7 +89,7 @@ private:
 
     std::ifstream _inFile;
 
-    Texture test;
+    Log _logger;
 
 };
 
