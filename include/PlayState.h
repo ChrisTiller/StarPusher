@@ -1,10 +1,8 @@
 #ifndef PLAYSTATE_H
 #define PLAYSTATE_H
 
-#include "SDL2/SDL.h"
 #include "GameState.h"
-#include "Texture.h"
-
+#include "CompletedState.h"
 
 class SDLWindow;
 
@@ -41,11 +39,8 @@ private:
 
     Game* _game;
     SDLWindow* _window;
-    Texture _texture;
 
-    Texture _player;
-
-    SDL_Rect textRect;
+    bool _levelCompleted;
 
 };
 

@@ -8,8 +8,8 @@ Camera::Camera() {
   _velXRIGHT = 0;
   _velYUP = 0;
   _velYDOWN = 0;
-  _maxVelX = 20;
-  _maxVelY = 20;
+  _maxVelX = 30;
+  _maxVelY = 30;
   _acceleration = 1;
 
   _inUse = false;

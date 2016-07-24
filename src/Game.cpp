@@ -24,7 +24,6 @@ Game::Game(string name, int width, int height)
 
     _level.setGame(this);
 
-
 }
 
 Game::~Game() {
@@ -37,7 +36,7 @@ void Game::run() {
     SDL_Event event;
 
     Uint32 startingTicks;
-    
+
     while (isRunning()) {
 
         startingTicks = SDL_GetTicks();

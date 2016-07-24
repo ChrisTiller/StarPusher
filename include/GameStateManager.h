@@ -4,7 +4,6 @@
 #include <vector>
 #include "SDL2/SDL.h"
 
-
 using std::vector;
 
 class GameState;

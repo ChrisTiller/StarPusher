@@ -1,7 +1,9 @@
 #include "../include/SDLWindow.h"
 #include "../include/Texture.h"
 
-SDLWindow::SDLWindow(string name, int width, int height) 
+#include <iostream>
+
+SDLWindow::SDLWindow(string name, int width, int height)
     : _r(255), _g(255), _b(255) {
 
     _windowName = name;
@@ -28,6 +30,8 @@ SDLWindow::SDLWindow(string name, int width, int height)
 
     _shown = true;
     _minimized = false;
+
+    _a = 255;
 
 }
 
@@ -86,14 +90,12 @@ void SDLWindow::handleEvents(SDL_Event& event) {
 }
 
 void SDLWindow::clear() {
-    
+
      if (!_minimized) {
-        SDL_SetRenderDrawColor(_renderer, _r, _g, _b, 255);
-        SDL_RenderFillRect(_renderer, NULL);
+        SDL_SetRenderDrawColor(_renderer, _r, _g, _b, _a);
         SDL_RenderClear(_renderer);
-
+        SDL_RenderFillRect(_renderer, NULL);
     }
-
 }
 
 void SDLWindow::placeTexture(Texture* texture, SDL_Rect* src, SDL_Rect* dst) {
@@ -130,6 +132,29 @@ void SDLWindow::setDrawColor(int r, int g, int b) {
     _b = b;
 }
 
+void SDLWindow::setDrawColor(int r, int g, int b, int a) {
+    _r = r;
+    _g = g;
+    _b = b;
+    _a = a;
+}
+
 SDL_Renderer* SDLWindow::getRenderer() const {
     return _renderer;
+}
+
+void SDLWindow::setTarget(Texture& target) {
+
+
+     target.setTexture(SDL_CreateTexture(_renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, _width, _height));
+
+     if (target.getTexture() == NULL) {
+        std::cout << "Unable to create blank texture. SDL_Error: " << SDL_GetError() << std::endl;
+    }
+
+    SDL_SetRenderTarget(_renderer, target.getTexture());
+}
+
+void SDLWindow::setDefaultTarget() {
+    SDL_SetRenderTarget(_renderer, NULL);
 }

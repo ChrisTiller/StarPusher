@@ -18,7 +18,8 @@ public:
 
     bool loadTexture(std::string);
 
-    SDL_Texture* getTexture() const;
+    SDL_Texture* getTexture();
+    void setTexture(SDL_Texture*);
     void setAlpha(Uint8);
 
     int getWidth() const;
@@ -34,7 +35,6 @@ private:
     int _width;
     int _height;
     double _ratio;
-
 
 };
 

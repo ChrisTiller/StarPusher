@@ -6,7 +6,7 @@
 
 
 Texture::Texture() {
-
+    _texture = NULL;
 }
 
 Texture::Texture(string name) {
@@ -16,7 +16,7 @@ Texture::Texture(string name) {
 }
 
 
-SDL_Texture* Texture::getTexture() const {
+SDL_Texture* Texture::getTexture() {
     return _texture;
 }
 
@@ -44,6 +44,10 @@ bool Texture::loadTexture(string name) {
     _ratio = (float)_width / _height;
 
     return true;
+}
+
+void Texture::setTexture(SDL_Texture* texture) {
+    _texture = texture;
 }
 
 int Texture::getWidth() const {

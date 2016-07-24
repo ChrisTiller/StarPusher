@@ -22,7 +22,7 @@ public:
         return _instance;
     }
 
-    
+
 
     void setResourcePath(const std::string);
 

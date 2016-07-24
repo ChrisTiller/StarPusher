@@ -27,6 +27,8 @@ void IntroState::init(Game* game) {
 
     _window->setDrawColor(0x1E,0x09,255);
 
+    _game->getLevel().loadLevels();
+
 }
 
 void IntroState::cleanup() {

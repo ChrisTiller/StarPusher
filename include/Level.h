@@ -45,7 +45,14 @@ public:
 
     void setGame(Game*);
 
-    void loadNextLevel();
+    bool levelCompleted();
+
+    void loadLevels();
+
+    void gotoNextLevel();
+    void gotoPrevLevel();
+
+    void resetLevel();
 
     void renderLevel();
 
@@ -53,29 +60,35 @@ public:
 
 private:
 
-    void placeFloorTexture(int, int);
+    void placeFloorTexture(int, int, int);
 
-    void fixLengths();
+    void fixLengths(int);
 
-    void placeGrass();
+    void placeGrass(int);
 
     char* getChar(int, int, int);
-    void setChar(int, int, int, CHAR_TYPE);
+    char* getChar(int, int);
 
+
+    void getPlayerPos();
     void updatePlayerPos(DIRECTION);
 
     CHAR_TYPE getCharType(int,int);
+    void setChar(int, int, CHAR_TYPE);
 
     bool movePlayer(int, int, int, int);
-    bool moveStar(int, int, int, int);
+    bool moveStar(int, int);
 
     std::string _fileName;
 
     int _currentLevel;
+    int _levels;
     int _width;
     int _height;
 
     vector<vector<vector<char> > > _board;
+
+    vector<vector<char> > _currentBoard;
 
     vector<Point> _stars;
     vector<Point> _goals;
