@@ -56,8 +56,8 @@ void Level::loadLevels() {
     std::vector<char> floorRow;
     std::vector<std::vector<char> > floorMultiRow;
 
-    Point star;
-    Point goal;
+    Point2D star;
+    Point2D goal;
 
     while ( getline (_inFile, line) ) {
 
@@ -139,7 +139,7 @@ void Level::loadLevels() {
                 *getChar(_levels - 1, _playerX, _playerY) = '@';
 
                 for (int i = 0; i < _goals.size(); i++) {
-                    Point p = _goals.at(i);
+                    Point2D p = _goals.at(i);
                     if (p.x == _playerX && p.y == _playerY) {
                         *getChar(_levels - 1, p.x, p.y) = '+';
                     } else {
@@ -148,7 +148,7 @@ void Level::loadLevels() {
                 }
 
                 for (int i = 0; i < _stars.size(); i++) {
-                    Point p = _stars.at(i);
+                    Point2D p = _stars.at(i);
 
                     if ( *(getChar(_levels - 1, p.x, p.y)) == '.') {
                         *getChar(_levels - 1, p.x, p.y) = '*';
@@ -297,61 +297,61 @@ void Level::renderLevel() {
                 switch (_currentBoard.at(i).at(j)) {
 
                     case 'G':
-                            currentTexture = _game->getResourceManager()->getTexture2("Grass_Block.png");
+                            currentTexture = _game->getResourceManager()->getTexture("Grass_Block.png");
                             _game->getWindowPtr()->placeTexture(currentTexture, xPos, yPos);
                         break;
                     case 'F':
-                            currentTexture = _game->getResourceManager()->getTexture2("Plain_Block.png");
+                            currentTexture = _game->getResourceManager()->getTexture("Plain_Block.png");
                             _game->getWindowPtr()->placeTexture(currentTexture, xPos, yPos);
                         break;
                     case '#':
 
-                            if (getCharType(j + 1, i) == WALL && getCharType(j, i - 1) == WALL) {
-                                currentTexture = _game->getResourceManager()->getTexture2("Wall_Block_Tall.png");
-                            } else if (getCharType(j - 1, i) == WALL && getCharType(j, i - 1) == WALL) {
-                                currentTexture = _game->getResourceManager()->getTexture2("Wall_Block_Tall.png");
-                            } else if (getCharType(j + 1, i) == WALL && getCharType(j, i + 1) == WALL) {
-                                currentTexture = _game->getResourceManager()->getTexture2("Wall_Block_Tall.png");
-                            } else if (getCharType(j - 1, i) == WALL && getCharType(j, i + 1) == WALL) {
-                                currentTexture = _game->getResourceManager()->getTexture2("Wall_Block_Tall.png");
+                            if (getCharType(j + 1, i) == CHAR_TYPE::WALL && getCharType(j, i - 1) == CHAR_TYPE::WALL) {
+                                currentTexture = _game->getResourceManager()->getTexture("Wall_Block_Tall.png");
+                            } else if (getCharType(j - 1, i) == CHAR_TYPE::WALL && getCharType(j, i - 1) == CHAR_TYPE::WALL) {
+                                currentTexture = _game->getResourceManager()->getTexture("Wall_Block_Tall.png");
+                            } else if (getCharType(j + 1, i) == CHAR_TYPE::WALL && getCharType(j, i + 1) == CHAR_TYPE::WALL) {
+                                currentTexture = _game->getResourceManager()->getTexture("Wall_Block_Tall.png");
+                            } else if (getCharType(j - 1, i) == CHAR_TYPE::WALL && getCharType(j, i + 1) == CHAR_TYPE::WALL) {
+                                currentTexture = _game->getResourceManager()->getTexture("Wall_Block_Tall.png");
                             } else {
-                                currentTexture = _game->getResourceManager()->getTexture2("Wood_Block_Tall.png");
+                                currentTexture = _game->getResourceManager()->getTexture("Wood_Block_Tall.png");
                             }
 
                             _game->getWindowPtr()->placeTexture(currentTexture, xPos, yPos);
                             break;
                     case '.':
-                            currentTexture = _game->getResourceManager()->getTexture2("Plain_Block.png");
+                            currentTexture = _game->getResourceManager()->getTexture("Plain_Block.png");
                             _game->getWindowPtr()->placeTexture(currentTexture, xPos, yPos);
-                            currentTexture = _game->getResourceManager()->getTexture2("RedSelector.png");
+                            currentTexture = _game->getResourceManager()->getTexture("RedSelector.png");
                             _game->getWindowPtr()->placeTexture(currentTexture, xPos, yPos);
                             break;
                     case '$':
-                            currentTexture = _game->getResourceManager()->getTexture2("Plain_Block.png");
+                            currentTexture = _game->getResourceManager()->getTexture("Plain_Block.png");
                             _game->getWindowPtr()->placeTexture(currentTexture, xPos, yPos);
-                            currentTexture = _game->getResourceManager()->getTexture2("Star.png");
+                            currentTexture = _game->getResourceManager()->getTexture("Star.png");
                             _game->getWindowPtr()->placeTexture(currentTexture, xPos, yPos);
                             break;
                     case '@':
-                            currentTexture = _game->getResourceManager()->getTexture2("Plain_Block.png");
+                            currentTexture = _game->getResourceManager()->getTexture("Plain_Block.png");
                             _game->getWindowPtr()->placeTexture(currentTexture, xPos, yPos);
-                            currentTexture = _game->getResourceManager()->getTexture2("boy.png");
+                            currentTexture = _game->getResourceManager()->getTexture("boy.png");
                             _game->getWindowPtr()->placeTexture(currentTexture, xPos, yPos);
                             break;
                     case '*':
-                            currentTexture = _game->getResourceManager()->getTexture2("Plain_Block.png");
+                            currentTexture = _game->getResourceManager()->getTexture("Plain_Block.png");
                             _game->getWindowPtr()->placeTexture(currentTexture, xPos, yPos);
-                            currentTexture = _game->getResourceManager()->getTexture2("Selector.png");
+                            currentTexture = _game->getResourceManager()->getTexture("Selector.png");
                             _game->getWindowPtr()->placeTexture(currentTexture, xPos, yPos);
-                            currentTexture = _game->getResourceManager()->getTexture2("Star.png");
+                            currentTexture = _game->getResourceManager()->getTexture("Star.png");
                             _game->getWindowPtr()->placeTexture(currentTexture, xPos, yPos);
                         break;
                     case '+':
-                            currentTexture = _game->getResourceManager()->getTexture2("Plain_Block.png");
+                            currentTexture = _game->getResourceManager()->getTexture("Plain_Block.png");
                             _game->getWindowPtr()->placeTexture(currentTexture, xPos, yPos);
-                            currentTexture = _game->getResourceManager()->getTexture2("RedSelector.png");
+                            currentTexture = _game->getResourceManager()->getTexture("RedSelector.png");
                             _game->getWindowPtr()->placeTexture(currentTexture, xPos, yPos);
-                            currentTexture = _game->getResourceManager()->getTexture2("boy.png");
+                            currentTexture = _game->getResourceManager()->getTexture("boy.png");
                             _game->getWindowPtr()->placeTexture(currentTexture, xPos, yPos);
                         break;
                 }
@@ -411,31 +411,31 @@ void Level::setChar(int x, int y, CHAR_TYPE type) {
     }
 
     switch (type)  {
-        case WALL:
+        case CHAR_TYPE::WALL:
             _currentBoard.at(y).at(x) = '#';
             return;
-        case PLAYER:
+        case CHAR_TYPE::PLAYER:
             _currentBoard.at(y).at(x) = '@';
             return;
-        case STAR:
+        case CHAR_TYPE::STAR:
             _currentBoard.at(y).at(x) = '$';
             return;
-        case GOAL_WITHOUT_STAR:
+        case CHAR_TYPE::GOAL_WITHOUT_STAR:
             _currentBoard.at(y).at(x) = '.';
             return;
         case GOAL_WITH_STAR:
             _currentBoard.at(y).at(x) = '*';
             return;
-        case PLAYER_ON_GOAL:
+        case CHAR_TYPE::PLAYER_ON_GOAL:
             _currentBoard.at(y).at(x) = '+';
             return;
-        case FLOOR:
+        case CHAR_TYPE::FLOOR:
             _currentBoard.at(y).at(x) = 'F';
             return;
-        case GRASS:
+        case CHAR_TYPE::GRASS:
             _currentBoard.at(y).at(x) = 'G';
             return;
-        case NONE:
+        case CHAR_TYPE::NONE:
             _currentBoard.at(y).at(x) = ' ';
             return;
     }
@@ -476,54 +476,54 @@ void Level::updatePlayerPos(DIRECTION dir) {
 CHAR_TYPE Level::getCharType(int x, int y) {
 
     if (x < 0 || y < 0 || x >= _currentBoard.at(0).size() || y >= _currentBoard.size()) {
-        return NONE;
+        return CHAR_TYPE::NONE;
     }
 
     switch (*getChar(x, y)) {
 
         case '#':
-            return WALL;
+            return CHAR_TYPE::WALL;
         case ' ':
-            return NONE;
+            return CHAR_TYPE::NONE;
         case 'G':
-            return GRASS;
+            return CHAR_TYPE::GRASS;
         case '@':
-            return PLAYER;
+            return CHAR_TYPE::PLAYER;
         case '$':
-            return STAR;
+            return CHAR_TYPE::STAR;
         case '.':
-            return GOAL_WITHOUT_STAR;
+            return CHAR_TYPE::GOAL_WITHOUT_STAR;
         case '*':
-            return GOAL_WITH_STAR;
+            return CHAR_TYPE::GOAL_WITH_STAR;
         case '+':
-            return PLAYER_ON_GOAL;
+            return CHAR_TYPE::PLAYER_ON_GOAL;
         case 'F':
-            return FLOOR;
+            return CHAR_TYPE::FLOOR;
     }
 }
 
 bool Level::movePlayer(int x, int y, int x2, int y2) {
 
-    if (getCharType(x, y) == WALL) {
+    if (getCharType(x, y) == CHAR_TYPE::WALL) {
         return false;
     }
 
     switch (getCharType(_playerX, _playerY)) {
 
-        case PLAYER:
+        case CHAR_TYPE::PLAYER:
 
             switch (getCharType(x, y)) {
 
-                case FLOOR:
-                    setChar(x, y, PLAYER);
-                    setChar(_playerX, _playerY, FLOOR);
+                case CHAR_TYPE::FLOOR:
+                    setChar(x, y, CHAR_TYPE::PLAYER);
+                    setChar(_playerX, _playerY, CHAR_TYPE::FLOOR);
                     return true;
 
-                case STAR:
+                case CHAR_TYPE::STAR:
 
                     if (moveStar(x2, y2)) {
-                        setChar(x, y, PLAYER);
-                        setChar(_playerX, _playerY, FLOOR);
+                        setChar(x, y, CHAR_TYPE::PLAYER);
+                        setChar(_playerX, _playerY, CHAR_TYPE::FLOOR);
                         return true;
                     } else {
                         return false;
@@ -534,7 +534,7 @@ bool Level::movePlayer(int x, int y, int x2, int y2) {
                     if (moveStar(x2, y2)) {
 
                         setChar(x, y, PLAYER_ON_GOAL);
-                        setChar(_playerX, _playerY, FLOOR);
+                        setChar(_playerX, _playerY, CHAR_TYPE::FLOOR);
 
                         return true;
                     } else {
@@ -544,7 +544,7 @@ bool Level::movePlayer(int x, int y, int x2, int y2) {
                 case GOAL_WITHOUT_STAR:
 
                     setChar(x, y, PLAYER_ON_GOAL);
-                    setChar(_playerX, _playerY, FLOOR);
+                    setChar(_playerX, _playerY, CHAR_TYPE::FLOOR);
 
                     return true;
 
@@ -556,18 +556,18 @@ bool Level::movePlayer(int x, int y, int x2, int y2) {
 
             switch (getCharType(x, y)) {
 
-                case FLOOR:
+                case CHAR_TYPE::FLOOR:
 
-                    setChar(x, y, PLAYER);
+                    setChar(x, y, CHAR_TYPE::PLAYER);
                     setChar(_playerX, _playerY, GOAL_WITHOUT_STAR);
 
                     return true;
 
-                case STAR:
+                case CHAR_TYPE::STAR:
 
                     if (moveStar(x2, y2)) {
 
-                        setChar(x, y, PLAYER);
+                        setChar(x, y, CHAR_TYPE::PLAYER);
                         setChar(_playerX, _playerY, GOAL_WITHOUT_STAR);
 
                         return true;
@@ -600,14 +600,14 @@ bool Level::movePlayer(int x, int y, int x2, int y2) {
 
 bool Level::moveStar(int x2, int y2) {
 
-    if (getCharType(x2, y2) == WALL || getCharType(x2, y2) == STAR || getCharType(x2, y2) == GOAL_WITH_STAR) {
+    if (getCharType(x2, y2) == CHAR_TYPE::WALL || getCharType(x2, y2) == CHAR_TYPE::STAR || getCharType(x2, y2) == CHAR_TYPE::GOAL_WITH_STAR) {
         return false;
     }
 
     switch (getCharType(x2, y2)) {
 
-        case FLOOR:
-            setChar(x2, y2, STAR);
+        case CHAR_TYPE::FLOOR:
+            setChar(x2, y2, CHAR_TYPE::STAR);
             return true;
 
         case GOAL_WITHOUT_STAR:

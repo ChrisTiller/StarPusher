@@ -9,7 +9,7 @@
 
 using std::vector;
 
-struct Point {
+struct Point2D {
     int x;
     int y;
 };
@@ -89,8 +89,8 @@ private:
 
     vector<vector<char> > _currentBoard;
 
-    vector<Point> _stars;
-    vector<Point> _goals;
+    vector<Point2D> _stars;
+    vector<Point2D> _goals;
 
     int _playerX;
     int _playerY;

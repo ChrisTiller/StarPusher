@@ -27,6 +27,8 @@ Game::Game(string name, int width, int height)
     logInstance.log("Set Game Resource Manager Resource folder");
     _resourceManager->getInstance()->setResourcePath("../resources");
 
+    _resourceManager->getInstance()->readAllLevels("../resources/levels/levels.txt");
+
     logInstance.log("Change State");
     _manager.changeState(IntroState::instance());
 

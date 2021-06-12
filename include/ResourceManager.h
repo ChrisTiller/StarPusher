@@ -9,6 +9,7 @@
 #include "SDL2/SDL_image.h"
 #include "SDL2/SDL_ttf.h"
 #include "Texture.h"
+#include "LevelEx.h"
 #include "Log.h"
 
 class ResourceManager {
@@ -23,8 +24,7 @@ public:
         return _instance;
     }
 
-    SDL_Texture* getTexture(const std::string);
-    Texture* getTexture2(const std::string);
+    Texture* getTexture(const std::string);
     TTF_Font* getFont(const std::string, int);
 
     void setResourcePath(const std::string);
@@ -34,6 +34,11 @@ public:
     bool loadTexture(const std::string);
     bool isTextureLoaded(const std::string);
     
+    void readAllLevels(std::string);
+    void loadLevel(int);
+    bool isLevelLoaded(int);
+
+    LevelEx getLevel(int);
 
 protected:
     explicit ResourceManager() {}
@@ -52,10 +57,12 @@ private:
 
     using FontPtr = std::unique_ptr<TTF_Font, void(*)(TTF_Font*)>;
 
-    std::map<std::string, SDLTexturePtr > _textures;
     std::map<std::string, FontPtr > _fonts;
 
     std::map<std::string, std::unique_ptr<Texture> > _myTextures;
+
+    std::map<int, vector<std::string > > _rawLevels;
+    std::map<int, LevelEx&> _levels;
 
     SDL_Renderer* _renderer;
 

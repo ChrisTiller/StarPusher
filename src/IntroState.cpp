@@ -15,10 +15,10 @@ void IntroState::init(Game* game) {
 
     logInstance.log("getting star title texture");
 
-    _texture = _game->getResourceManager()->getTexture2("star_title.png");
+    _texture = _game->getResourceManager()->getTexture("star_title.png");
 
     logInstance.log("getting background texture");
-    _background = _game->getResourceManager()->getTexture2("cloud_background.png");
+    _background = _game->getResourceManager()->getTexture("cloud_background.png");
 
     _texture->setAlpha(0);
 
