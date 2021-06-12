@@ -1,0 +1,5 @@
+Point.o: Point.cpp /usr/include/stdc-predef.h ../include/Point.h
+
+/usr/include/stdc-predef.h:
+
+../include/Point.h:
