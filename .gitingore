@@ -1,0 +1,8 @@
+obj/*.o
+bin/
+~*
+*~
+depends/*.d
+.vscode/
+src/*.[od]
+include/*.h.gch
