@@ -3,6 +3,6 @@ bin/
 ~*
 *~
 depends/*.d
-.vscode/
+.vscode/*
 src/*.[od]
 include/*.h.gch

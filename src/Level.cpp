@@ -500,6 +500,8 @@ CHAR_TYPE Level::getCharType(int x, int y) {
         case 'F':
             return CHAR_TYPE::FLOOR;
     }
+
+    return CHAR_TYPE::NONE;
 }
 
 bool Level::movePlayer(int x, int y, int x2, int y2) {
@@ -596,6 +598,8 @@ bool Level::movePlayer(int x, int y, int x2, int y2) {
             }
             break;
     }
+
+    return false;
 }
 
 bool Level::moveStar(int x2, int y2) {
@@ -614,4 +618,6 @@ bool Level::moveStar(int x2, int y2) {
             setChar(x2, y2, GOAL_WITH_STAR);
             return true;
     }
+
+    return false;
 }
