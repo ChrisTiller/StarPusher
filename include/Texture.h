@@ -13,6 +13,8 @@ public:
 
     Texture();
     Texture(SDLTexturePtr);
+    
+    ~Texture();
 
     SDL_Texture* getTexture() const;
     int getWidth() const;

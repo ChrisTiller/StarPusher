@@ -1,4 +1,4 @@
-#include "../include/Blocks/Block.h"
+#include "../include/Block.h"
 
 using namespace Graphics;
 
@@ -19,11 +19,11 @@ Block::Block(BlockTypes blockType, Texture* texture, int x, int y) : GameObject(
 }
 
 void Block::moveUp() {
-    setLocation(getLocation().getX(), getLocation().getY() - getTexture()->getHeight());
+    setLocation(getLocation().getX(), getLocation().getY() - 40);
 }
 
 void Block::moveDown() {
-    setLocation(getLocation().getX(), getLocation().getY() + getTexture()->getHeight());
+    setLocation(getLocation().getX(), getLocation().getY() + 40);
 }
 
 void Block::moveLeft() {
@@ -32,4 +32,8 @@ void Block::moveLeft() {
 
 void Block::moveRight() {
     setLocation(getLocation().getX() + getTexture()->getWidth(), getLocation().getY());
+}
+
+BlockTypes Block::getBlockType() {
+    return _blockType;
 }

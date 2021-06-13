@@ -13,23 +13,25 @@ void PlayState::init(Game* game) {
 
     _window = _game->getWindowPtr();
 
-    _game->getLevel().gotoNextLevel();
+    _levelNumber = 1;
+    _currentLevel = _game->getResourceManager()->getInstance()->getLevel(1);
 
     _game->getCamera().setUse(true);
 
-    //_window->setDrawColor(0x1E,0x09,255);
-    //_window->setDrawColor(0,0,0);
-    //_window->setDrawColor(0xD9, 0xE9, 0xF);
-    //_window->setDrawColor(176, 209, 255);
     _window->setDrawColor(135,206,250);
 
     _levelCompleted = false;
+
+    centerCamera();
 }
 
 void PlayState::cleanup() {
 
-    _window = NULL;
-    _game = NULL;
+    _window = nullptr;
+    _game = nullptr;
+
+    delete _playState;
+    _playState = nullptr;
 }
 
 void PlayState::handleEvents(SDL_Event& event) {
@@ -41,19 +43,19 @@ void PlayState::handleEvents(SDL_Event& event) {
         switch( event.key.keysym.sym ) {
 
             case SDLK_UP:
-                _game->getLevel().movePlayer(UP);
+                _currentLevel.movePlayerUp();
                 break;
 
             case SDLK_DOWN:
-                _game->getLevel().movePlayer(DOWN);
+                _currentLevel.movePlayerDown();
                 break;
 
             case SDLK_LEFT:
-                _game->getLevel().movePlayer(LEFT);
+                _currentLevel.movePlayerLeft();
                 break;
 
             case SDLK_RIGHT:
-                _game->getLevel().movePlayer(RIGHT);
+                _currentLevel.movePlayerRight();
                 break;
 
             case SDLK_BACKSPACE:
@@ -61,22 +63,22 @@ void PlayState::handleEvents(SDL_Event& event) {
                 break;
 
             case SDLK_c:
-                _game->getCamera().setXYPos(0,0);
+                centerCamera();
                 break;
 
             case SDLK_n:
-                _game->getLevel().gotoPrevLevel();
-                _game->getCamera().setXYPos(0,0);
+                goToPreviousLevel();
+                centerCamera();                
                 break;
 
             case SDLK_m:
-                _game->getLevel().gotoNextLevel();
-                _game->getCamera().setXYPos(0,0);
+                goToNextLevel();
+                centerCamera();                
                 break;
 
             case SDLK_r:
-                _game->getLevel().resetLevel();
-                _game->getCamera().setXYPos(0,0);
+                _currentLevel = _game->getResourceManager()->getInstance()->getLevel(_levelNumber);
+                centerCamera();
                 break;
 
         }
@@ -95,15 +97,41 @@ void PlayState::draw() {
 
     _window->clear();
 
-    //_window->placeTexture(&_texture, NULL, NULL);
+    SDL_Rect rct = _game->getCamera().getRect();
 
-    _game->getLevel().renderLevel();
+    for (auto blockToRender : _currentLevel.getVisibleBlocks(rct)) {
 
-    if (_game->getLevel().levelCompleted()) {
-        _levelCompleted = true;
+        _window->placeTexture(blockToRender->getTexture(), \
+                              blockToRender->getLocation().getX() - _game->getCamera().getXPos(), \
+                              blockToRender->getLocation().getY() - _game->getCamera().getYPos());
+
+        blockToRender = nullptr;
     }
 
-    //_window->placeTexture(&_player, NULL, &textRect);
-
     _window->render();
+
+    if (_currentLevel.isCompleted()) {
+        goToNextLevel();
+        centerCamera();
+    }
 }
+
+void PlayState::goToPreviousLevel() {
+    if (--_levelNumber < 1) {
+        _levelNumber = 1;
+    }
+    _currentLevel = _game->getResourceManager()->getInstance()->getLevel(_levelNumber);
+}
+
+void PlayState::goToNextLevel() {
+    if (++_levelNumber > 50) {
+        _levelNumber = 50;
+    }
+    _currentLevel = _game->getResourceManager()->getInstance()->getLevel(_levelNumber);
+}
+
+void PlayState::centerCamera() {
+    _game->getCamera().setXYPos(-(( _window->getWidth() / 2 ) - ( _currentLevel.getWidth() / 2 )), \
+                                -(( _window->getHeight() / 2 ) - ( _currentLevel.getHeight() / 2 )));
+}
+

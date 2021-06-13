@@ -1,7 +1,7 @@
 #ifndef CAMERA_H
 #define CAMERA_H
 
-#include "SDL2/SDL.h"
+#include "SDLWindow.h"
 
 
 class Camera {
@@ -9,6 +9,7 @@ class Camera {
 public:
 
 	Camera();
+	Camera(SDLWindow*);
 
 	void handleEvents(SDL_Event&);
 	void update();
@@ -16,14 +17,22 @@ public:
 	int getXPos() const;
 	int getYPos() const;
 
+	float getZoom() const;
+
+	SDL_Rect getRect() const;
+
 	void setXYPos(const int, const int);
 
 	void setUse(bool);
 
 private:
 
+	SDLWindow* _window;
+
 	int _posX;
 	int _posY;
+
+	float _zoom;
 
 	int _velXRIGHT;
 	int _velXLEFT;

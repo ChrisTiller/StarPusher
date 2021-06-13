@@ -27,3 +27,11 @@ void Point::setX(int x) {
 void Point::setY(int y) {
     _y = y;
 }
+
+bool Point::operator==(const Point& p) {
+    return (_x == p._x && _y == p._y);
+}
+
+bool Point::operator!=(const Point& p) {
+    return !((*this) == p);
+}

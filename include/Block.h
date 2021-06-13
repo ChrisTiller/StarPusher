@@ -1,7 +1,7 @@
 #ifndef BLOCK_H
 #define BLOCK_H
 
-#include "../GameObject.h"
+#include "GameObject.h"
 #include "BlockTypes.h"
 
 namespace Graphics {

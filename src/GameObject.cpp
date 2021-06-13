@@ -3,7 +3,7 @@
 using namespace Graphics;
 
 GameObject::GameObject() {
-
+    _texture = NULL;
 }
 
 GameObject::GameObject(Texture* texture) {
@@ -36,4 +36,22 @@ void GameObject::setLocation(int x, int y) {
 
 Texture* GameObject::getTexture() {
     return _texture;
+}
+
+SDL_Rect GameObject::getRect() {
+    SDL_Rect rect;
+
+    rect.x = _location.getX();
+    rect.y = _location.getY();
+    rect.w = _texture->getWidth();
+    rect.h = _texture->getHeight();
+
+    return rect;
+}
+
+bool GameObject::intersects(SDL_Rect rect) {
+    return ( getLocation().getX() + getTexture()->getWidth()  >= rect.x && \
+             getLocation().getY() + getTexture()->getHeight() >= rect.y && \
+             getLocation().getX() <= (rect.x + rect.w) && \
+             getLocation().getY() <= (rect.y + rect.h));
 }

@@ -3,6 +3,7 @@
 
 #include "GameState.h"
 #include "CompletedState.h"
+#include "LevelEx.h"
 
 class SDLWindow;
 
@@ -24,6 +25,11 @@ public:
     void update();
     void draw();
 
+    void goToNextLevel();
+    void goToPreviousLevel();
+
+    void centerCamera();
+
     static PlayState* instance() {
         if (!_playState) {
             _playState = new PlayState;
@@ -36,6 +42,9 @@ protected:
 
 private:
     static PlayState* _playState;
+
+    int _levelNumber;
+    LevelEx _currentLevel;
 
     Game* _game;
     SDLWindow* _window;

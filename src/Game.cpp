@@ -6,7 +6,7 @@ const int SCREEN_TICKS_PER_SECOND = 1000 / SCREEN_FPS;
 
 
 Game::Game(string name, int width, int height)
-    : _window(name, width, height), _running(true), _level("../resources/levels/levels.txt") {
+    : _window(name, width, height), _running(true), _level("../resources/levels/levels.txt"), _camera(&_window) {
 
 
     if ((IMG_Init(IMG_INIT_PNG) & IMG_INIT_PNG) != IMG_INIT_PNG) {
@@ -38,6 +38,7 @@ Game::Game(string name, int width, int height)
 }
 
 Game::~Game() {
+    _resourceManager->getInstance()->cleanUp();
     IMG_Quit();
     SDL_Quit();
 }

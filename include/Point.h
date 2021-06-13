@@ -16,6 +16,9 @@ namespace Graphics {
         void setX(int);
         void setY(int);
 
+        bool operator==(const Point&);
+        bool operator!=(const Point&);
+        
     private:
 
         int _x;

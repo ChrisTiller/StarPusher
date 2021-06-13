@@ -24,6 +24,8 @@ public:
         return _instance;
     }
 
+    void cleanUp();
+
     Texture* getTexture(const std::string);
     TTF_Font* getFont(const std::string, int);
 
@@ -62,12 +64,15 @@ private:
     std::map<std::string, std::unique_ptr<Texture> > _myTextures;
 
     std::map<int, vector<std::string > > _rawLevels;
-    std::map<int, LevelEx&> _levels;
+    std::map<int, LevelEx> _levels;
 
     SDL_Renderer* _renderer;
 
     std::string _resourcePath;
 
+    void squareLevel(vector<vector<Block> >&, int);
+    void populateFloor(vector<vector<Block> >&, int, int);
+    void populateGrass(vector<vector<Block> >&);
     static ResourceManager* _instance;
 };
 

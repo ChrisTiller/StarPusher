@@ -17,9 +17,12 @@ namespace Graphics {
 
         Point getLocation();
         Texture* getTexture();
+        SDL_Rect getRect();
 
         void setLocation(Point);
         void setLocation(int, int);
+
+        bool intersects(SDL_Rect);
 
         virtual void moveUp() = 0;
         virtual void moveDown() = 0;

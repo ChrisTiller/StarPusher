@@ -4,6 +4,8 @@ Camera::Camera() {
   _posX = 0;
   _posY = 0;
 
+  _zoom = 1.0;
+
   _velXLEFT = 0;
   _velXRIGHT = 0;
   _velYUP = 0;
@@ -18,6 +20,30 @@ Camera::Camera() {
   _s = false;
   _a = false;
   _d = false;
+}
+
+Camera::Camera(SDLWindow* window) {
+  _posX = 0;
+  _posY = 0;
+
+  _zoom = 1.0;
+
+  _velXLEFT = 0;
+  _velXRIGHT = 0;
+  _velYUP = 0;
+  _velYDOWN = 0;
+  _maxVelX = 30;
+  _maxVelY = 30;
+  _acceleration = 1;
+
+  _inUse = false;
+
+  _w = false;
+  _s = false;
+  _a = false;
+  _d = false;
+  
+  _window = window;
 }
 
 void Camera::handleEvents(SDL_Event& e) {
@@ -56,6 +82,12 @@ void Camera::handleEvents(SDL_Event& e) {
           break;
         case SDLK_d:
           _d = false;
+          break;
+        case SDLK_KP_PLUS:
+          _zoom += 0.1f;
+          break;
+        case SDLK_KP_MINUS:
+          _zoom -= 0.1f;
           break;
       }
   }
@@ -139,6 +171,21 @@ int Camera::getXPos() const {
 
 int Camera::getYPos() const {
   return _posY;
+}
+
+float Camera::getZoom() const {
+  return _zoom;
+}
+
+SDL_Rect Camera::getRect() const {
+  SDL_Rect rect;
+
+  rect.x = _posX;
+  rect.y = _posY;
+  rect.w = _window->getWidth();
+  rect.h = _window->getHeight();
+
+  return rect;
 }
 
 void Camera::setXYPos(const int x, const int y) {

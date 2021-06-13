@@ -1,5 +1,5 @@
-#include "../include/Texture.h"
 #include "SDL2/SDL_image.h"
+#include "../include/Texture.h"
 #include "../include/Log.h"
 
 Texture::Texture() : _SDLTexture{nullptr, nullptr}
@@ -11,8 +11,6 @@ Texture::Texture() : _SDLTexture{nullptr, nullptr}
 
 Texture::Texture(SDLTexturePtr texture) : _SDLTexture{nullptr, nullptr}
 {
-    logInstance.log("New Texture instance created");
-
     _SDLTexture = std::move(texture);
 
     if (_SDLTexture.get())
@@ -28,6 +26,10 @@ Texture::Texture(SDLTexturePtr texture) : _SDLTexture{nullptr, nullptr}
     {
         _ratio = 0;
     } 
+}
+
+Texture::~Texture() {
+    _SDLTexture.reset();
 }
 
 SDL_Texture* Texture::getTexture() const
