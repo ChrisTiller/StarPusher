@@ -4,19 +4,16 @@
 #include "SDL2/SDL.h"
 #include "GameState.h"
 #include "Texture.h"
-
-
-class SDLWindow;
+#include "SDLWindow.h"
 
 class IntroState : public GameState {
 
 public:
 
     ~IntroState() {
-        cleanup();
     }
 
-    void init(Game*);
+    void init(GameStateManager*);
     void cleanup();
 
     void pause() {}
@@ -34,9 +31,10 @@ public:
     }
 
 protected:
-    IntroState() {}
+    IntroState() { _manager = nullptr; }
 
 private:
+
     static IntroState* _introState;
 
     Game* _game;

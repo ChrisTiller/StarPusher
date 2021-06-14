@@ -8,7 +8,6 @@
 #include "SDLWindow.h"
 #include "GameStateManager.h"
 #include "ResourceManager.h"
-#include "Level.h"
 #include "Camera.h"
 #include "Log.h"
 
@@ -30,12 +29,9 @@ public:
 
     SDLWindow* getWindowPtr();
 
-    ResourceManager* getResourceManager();
-
-    Level& getLevel();
+    ResourceManager& getResourceManager();
 
     Camera& getCamera();
-
 
 private:
 
@@ -43,7 +39,6 @@ private:
 
     GameStateManager _manager;
     ResourceManager* _resourceManager;
-    Level _level;
     Camera _camera;
 
     bool _running;

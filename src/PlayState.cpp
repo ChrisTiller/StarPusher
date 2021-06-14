@@ -7,14 +7,16 @@
 
 PlayState* PlayState::_playState = NULL;
 
-void PlayState::init(Game* game) {
+void PlayState::init(GameStateManager* manager) {
 
-    _game = game;
+    _manager = manager;
+
+    _game = &_manager->getGame();
 
     _window = _game->getWindowPtr();
 
     _levelNumber = 1;
-    _currentLevel = _game->getResourceManager()->getInstance()->getLevel(1);
+    _currentLevel = _game->getResourceManager().getLevel(1);
 
     _game->getCamera().setUse(true);
 
@@ -27,11 +29,14 @@ void PlayState::init(Game* game) {
 
 void PlayState::cleanup() {
 
-    _window = nullptr;
-    _game = nullptr;
+    if (_playState) {
+        _window = nullptr;
+        _game = nullptr;
 
-    delete _playState;
-    _playState = nullptr;
+        delete _playState;
+        _playState = nullptr;
+    }
+    
 }
 
 void PlayState::handleEvents(SDL_Event& event) {
@@ -59,7 +64,8 @@ void PlayState::handleEvents(SDL_Event& event) {
                 break;
 
             case SDLK_BACKSPACE:
-                _game->getGameStateManager().pushState(IntroState::instance());
+                //_manager->changeState(IntroState::instance());
+                RequestChangeState((GameState*)this, (GameState*)IntroState::instance());
                 break;
 
             case SDLK_c:
@@ -77,7 +83,7 @@ void PlayState::handleEvents(SDL_Event& event) {
                 break;
 
             case SDLK_r:
-                _currentLevel = _game->getResourceManager()->getInstance()->getLevel(_levelNumber);
+                _currentLevel = _game->getResourceManager().getLevel(_levelNumber);
                 centerCamera();
                 break;
 
@@ -88,9 +94,8 @@ void PlayState::handleEvents(SDL_Event& event) {
 void PlayState::update() {
 
     if  (_levelCompleted) {
-        _game->getGameStateManager().changeState(CompletedState::instance());
+        _manager->changeState(CompletedState::instance());
     }
-
 }
 
 void PlayState::draw() {
@@ -120,14 +125,14 @@ void PlayState::goToPreviousLevel() {
     if (--_levelNumber < 1) {
         _levelNumber = 1;
     }
-    _currentLevel = _game->getResourceManager()->getInstance()->getLevel(_levelNumber);
+    _currentLevel = _game->getResourceManager().getLevel(_levelNumber);
 }
 
 void PlayState::goToNextLevel() {
     if (++_levelNumber > 50) {
         _levelNumber = 50;
     }
-    _currentLevel = _game->getResourceManager()->getInstance()->getLevel(_levelNumber);
+    _currentLevel = _game->getResourceManager().getLevel(_levelNumber);
 }
 
 void PlayState::centerCamera() {

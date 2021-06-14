@@ -3,17 +3,17 @@
 
 #include <vector>
 #include "SDL2/SDL.h"
+#include "GameState.h"
 
 using std::vector;
 
-class GameState;
 class Game;
 
 class GameStateManager {
 
 public:
 
-    GameStateManager() {};
+    GameStateManager(Game*);
 
     void init();
     void cleanup();
@@ -26,8 +26,13 @@ public:
     void update();
     void draw();
 
-    void setGame(Game*);
+    Game& getGame();
+
 private:
+
+    void RequestChangeState(GameState*, GameState*);
+
+    EventHandler<GameState*, GameState*> changeHandler;
 
     vector<GameState*> _states;
 

@@ -4,18 +4,17 @@
 #include "GameState.h"
 #include "CompletedState.h"
 #include "LevelEx.h"
+#include "SDLWindow.h"
 
-class SDLWindow;
 
 class PlayState : public GameState {
 
 public:
 
     ~PlayState() {
-        cleanup();
     }
 
-    void init(Game*);
+    void init(GameStateManager*);
     void cleanup();
 
     void pause() {}
@@ -38,7 +37,7 @@ public:
     }
 
 protected:
-    PlayState() {}
+    PlayState() { _manager = nullptr; }
 
 private:
     static PlayState* _playState;

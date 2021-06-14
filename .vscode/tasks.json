@@ -5,6 +5,8 @@
             "label": "C/C++: g++ build StarPusher",
             "command": "/usr/bin/g++",
             "args": [
+                "--std",
+                "c++17",
                 "-g",
                 "${workspaceFolder}/src/*.cpp",
                 "-I",

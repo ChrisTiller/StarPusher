@@ -11,3 +11,4 @@ src/test
 bin/
 bin/StarPusher
 .gitignore
+bin/StarPusher

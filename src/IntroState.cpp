@@ -3,22 +3,24 @@
 #include "../include/Game.h"
 #include "../include/PlayState.h"
 
-IntroState* IntroState::_introState = NULL;
+IntroState* IntroState::_introState = nullptr;
 
-void IntroState::init(Game* game) {
+void IntroState::init(GameStateManager* manager) {
 
-    _game = game;
+    _manager = manager;
 
-    _window = _game->getWindowPtr();
+    _game = &_manager->getGame();
+
+    _window = _manager->getGame().getWindowPtr();
 
     logInstance.setFileName("test");
 
     logInstance.log("getting star title texture");
 
-    _texture = _game->getResourceManager()->getTexture("star_title.png");
+    _texture = _game->getResourceManager().getTexture("star_title.png");
 
     logInstance.log("getting background texture");
-    _background = _game->getResourceManager()->getTexture("cloud_background.png");
+    _background = _game->getResourceManager().getTexture("cloud_background.png");
 
     _texture->setAlpha(0);
 
@@ -32,16 +34,18 @@ void IntroState::init(Game* game) {
     _game->getCamera().setUse(false);
 
     _window->setDrawColor(0x1E,0x09,255);
-
-    _game->getLevel().loadLevels();
-
 }
 
 void IntroState::cleanup() {
 
-    _game = NULL;
-    _window = NULL;
-
+    if (_introState) {
+        _manager = nullptr;
+        _game = nullptr;
+        _window = nullptr;
+    
+        delete _introState;
+        _introState = nullptr;
+    }    
 }
 
 void IntroState::handleEvents(SDL_Event& event) {
@@ -53,7 +57,7 @@ void IntroState::handleEvents(SDL_Event& event) {
         switch( event.key.keysym.sym ) {
 
            case SDLK_RETURN:
-            _game->getGameStateManager().changeState(PlayState::instance());
+            _manager->changeState(PlayState::instance());
             break;
             case SDLK_UP:
 

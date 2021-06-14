@@ -6,7 +6,7 @@ const int SCREEN_TICKS_PER_SECOND = 1000 / SCREEN_FPS;
 
 
 Game::Game(string name, int width, int height)
-    : _window(name, width, height), _running(true), _level("../resources/levels/levels.txt"), _camera(&_window) {
+    : _window(name, width, height), _running(true), _camera(&_window), _manager(this) {
 
 
     if ((IMG_Init(IMG_INIT_PNG) & IMG_INIT_PNG) != IMG_INIT_PNG) {
@@ -17,8 +17,6 @@ Game::Game(string name, int width, int height)
     logInstance.setFileName("test");
 
     logInstance.log("Set Game Manager");
-
-    _manager.setGame(this);
 
     logInstance.log("Set Game Resource Manager");
 
@@ -32,13 +30,11 @@ Game::Game(string name, int width, int height)
     logInstance.log("Change State");
     _manager.changeState(IntroState::instance());
 
-    logInstance.log("Set level game");
-    _level.setGame(this);
-
 }
 
 Game::~Game() {
-    _resourceManager->getInstance()->cleanUp();
+    getResourceManager().cleanUp();
+    getGameStateManager().cleanup();
     IMG_Quit();
     SDL_Quit();
 }
@@ -107,12 +103,8 @@ GameStateManager& Game::getGameStateManager() {
     return _manager;
 }
 
-ResourceManager* Game::getResourceManager() {
-    return _resourceManager->getInstance();
-}
-
-Level& Game::getLevel() {
-    return _level;
+ResourceManager& Game::getResourceManager() {
+    return (*_resourceManager->getInstance());
 }
 
 Camera& Game::getCamera() {

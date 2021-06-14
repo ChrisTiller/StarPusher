@@ -4,17 +4,14 @@
 #include "GameState.h"
 #include "Texture.h"
 
-class SDLWindow;
-
 class CompletedState : public GameState {
 
 public:
 
     ~CompletedState() {
-        cleanup();
     }
 
-    void init(Game*);
+    void init(GameStateManager*);
     void cleanup();
 
     void pause();
@@ -31,21 +28,20 @@ public:
         return _completedState;
     }
 
-    protected:
+protected:
+
     CompletedState() {}
 
-    private:
+private:
+
     static CompletedState* _completedState;
 
     Game* _game;
-    SDLWindow* _window;
 
     Texture _background;
     Texture _picture;
 
     bool _levelCompleted;
-
-
 };
 
 #endif

@@ -6,32 +6,20 @@
 
 CompletedState* CompletedState::_completedState = NULL;
 
-void CompletedState::init(Game* game) {
+void CompletedState::init(GameStateManager* manager) {
 
 
-    _game = game;
+    _manager = manager;
 
-    _window = _game->getWindowPtr();
+    _game = &_manager->getGame();
 
-    //_game->getWindowPtr()->setTarget(_background);
+    SDLWindow* _window = _game->getWindowPtr();
 
-    _game->getWindowPtr()->setDrawColor(0, 0, 0, 255);
+    _window->setDrawColor(0, 0, 0, 255);
 
-    _game->getWindowPtr()->clear();
+    _window->clear();
 
-    //_game->getLevel().renderLevel();
-
-    //_game->getWindowPtr()->setDefaultTarget();
-
-    //_window->setDrawColor(0x1E,0x09,255, 0);
-
-    //_window->clear();
-
-    //_game->getWindowPtr()->placeTexture(&_background, 0, 0);
-
-    _game->getWindowPtr()->render();
-
-    //_window->setDrawColor(0x1E,0x09,255, 10);
+    _window->render();
 
 }
 
@@ -68,7 +56,7 @@ void CompletedState::handleEvents(SDL_Event& event) {
                 break;
 
             case SDLK_BACKSPACE:
-                _game->getGameStateManager().changeState(PlayState::instance());
+                _manager->changeState(PlayState::instance());
                 break;
 
             case SDLK_c:
