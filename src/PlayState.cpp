@@ -16,7 +16,7 @@ void PlayState::init(GameStateManager* manager) {
     _window = _game->getWindowPtr();
 
     _levelNumber = 1;
-    _currentLevel = _game->getResourceManager().getLevel(1);
+    _currentLevel = ResourceManager::getInstance()->getLevel(1);
 
     _game->getCamera().setUse(true);
 
@@ -41,8 +41,6 @@ void PlayState::cleanup() {
 
 void PlayState::handleEvents(SDL_Event& event) {
 
-    _game->getWindowPtr()->handleEvents(event);
-
     if( event.type == SDL_KEYDOWN ) {
 
         switch( event.key.keysym.sym ) {
@@ -64,7 +62,6 @@ void PlayState::handleEvents(SDL_Event& event) {
                 break;
 
             case SDLK_BACKSPACE:
-                //_manager->changeState(IntroState::instance());
                 RequestChangeState((GameState*)this, (GameState*)IntroState::instance());
                 break;
 
@@ -83,7 +80,7 @@ void PlayState::handleEvents(SDL_Event& event) {
                 break;
 
             case SDLK_r:
-                _currentLevel = _game->getResourceManager().getLevel(_levelNumber);
+                _currentLevel = ResourceManager::getInstance()->getLevel(_levelNumber);
                 centerCamera();
                 break;
 
@@ -125,14 +122,14 @@ void PlayState::goToPreviousLevel() {
     if (--_levelNumber < 1) {
         _levelNumber = 1;
     }
-    _currentLevel = _game->getResourceManager().getLevel(_levelNumber);
+    _currentLevel = ResourceManager::getInstance()->getLevel(_levelNumber);
 }
 
 void PlayState::goToNextLevel() {
     if (++_levelNumber > 50) {
         _levelNumber = 50;
     }
-    _currentLevel = _game->getResourceManager().getLevel(_levelNumber);
+    _currentLevel = ResourceManager::getInstance()->getLevel(_levelNumber);
 }
 
 void PlayState::centerCamera() {

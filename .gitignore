@@ -1,14 +1,8 @@
-obj/*.o
 bin/
 ~*
 *~
-depends/*.d
 .vscode/*
 src/*.[od]
 include/*.h.gch
 test
 src/test
-bin/
-bin/StarPusher
-.gitignore
-bin/StarPusher

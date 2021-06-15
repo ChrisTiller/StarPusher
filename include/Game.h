@@ -11,9 +11,6 @@
 #include "Camera.h"
 #include "Log.h"
 
-
-using std::vector;
-
 class Game {
 
 public:
@@ -29,8 +26,6 @@ public:
 
     SDLWindow* getWindowPtr();
 
-    ResourceManager& getResourceManager();
-
     Camera& getCamera();
 
 private:
@@ -38,7 +33,6 @@ private:
     SDLWindow  _window;
 
     GameStateManager _manager;
-    ResourceManager* _resourceManager;
     Camera _camera;
 
     bool _running;

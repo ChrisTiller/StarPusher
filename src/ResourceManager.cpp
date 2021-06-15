@@ -233,7 +233,7 @@ void ResourceManager::loadLevel(int levelNumber) {
 
     populateGrass(board);
 
-    _levels.insert(std::make_pair(levelNumber, LevelEx(board, stars, goals, character, width * 50, height * 40, getInstance())));
+    _levels.insert(std::make_pair(levelNumber, LevelEx(board, stars, goals, character, width * 50, height * 40)));
 
 }
 

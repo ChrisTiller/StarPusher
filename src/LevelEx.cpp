@@ -5,7 +5,7 @@ LevelEx::LevelEx() {
 
 }
 
-LevelEx::LevelEx(vector<vector<Block> > board, vector<Block> stars, vector<Block> goals, Block player, int width, int height, ResourceManager* resourceManager) {
+LevelEx::LevelEx(vector<vector<Block> > board, vector<Block> stars, vector<Block> goals, Block player, int width, int height) {
     _board = board;
     _stars = stars;
     _goals = goals;
@@ -13,7 +13,6 @@ LevelEx::LevelEx(vector<vector<Block> > board, vector<Block> stars, vector<Block
     _width = width;
     _height = height;
     _completed = false;
-    _resourceManager = resourceManager;
 }
 
 vector<Block*> LevelEx::getVisibleBlocks(SDL_Rect rect) {
@@ -148,12 +147,12 @@ void LevelEx::checkForStarsOnGoals() {
 
     for (auto &goal : _goals) {
 
-        goal = Block(BlockTypes::GOAL, _resourceManager->getTexture("RedSelector.png"), goal.getLocation());
+        goal = Block(BlockTypes::GOAL, ResourceManager::getInstance()->getTexture("RedSelector.png"), goal.getLocation());
 
         for (auto &block : getBlocksAtLocation(goal.getLocation())) {
 
             if (block->getBlockType() == BlockTypes::STAR) {
-                goal = Block(BlockTypes::GOAL, _resourceManager->getTexture("Selector.png"), goal.getLocation());
+                goal = Block(BlockTypes::GOAL, ResourceManager::getInstance()->getTexture("Selector.png"), goal.getLocation());
 
                 starsOnGoalsCounter++;
             }

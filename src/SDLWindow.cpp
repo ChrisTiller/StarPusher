@@ -67,6 +67,7 @@ void SDLWindow::handleEvents(SDL_Event& event) {
     switch (event.window.event) {
 
         case SDL_WINDOWEVENT_SHOWN:
+            _minimized = false;
             _shown = true;
             break;
         case SDL_WINDOWEVENT_HIDDEN:

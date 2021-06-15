@@ -37,8 +37,6 @@ void CompletedState::resume() {
 
 void CompletedState::handleEvents(SDL_Event& event) {
 
-    _game->getWindowPtr()->handleEvents(event);
-
     if( event.type == SDL_KEYDOWN ) {
 
         switch( event.key.keysym.sym ) {

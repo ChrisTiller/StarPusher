@@ -14,18 +14,9 @@ Game::Game(string name, int width, int height)
         return;
     }
 
-    logInstance.setFileName("test");
-
-    logInstance.log("Set Game Manager");
-
-    logInstance.log("Set Game Resource Manager");
-
-    _resourceManager->getInstance()->setRenderer(getWindowPtr()->getRenderer());
-
-    logInstance.log("Set Game Resource Manager Resource folder");
-    _resourceManager->getInstance()->setResourcePath("../resources");
-
-    _resourceManager->getInstance()->readAllLevels("../resources/levels/levels.txt");
+    ResourceManager::getInstance()->setRenderer(getWindowPtr()->getRenderer());
+    ResourceManager::getInstance()->setResourcePath("../resources");
+    ResourceManager::getInstance()->readAllLevels("../resources/levels/levels.txt");
 
     logInstance.log("Change State");
     _manager.changeState(IntroState::instance());
@@ -33,7 +24,7 @@ Game::Game(string name, int width, int height)
 }
 
 Game::~Game() {
-    getResourceManager().cleanUp();
+    ResourceManager::getInstance()->cleanUp();
     getGameStateManager().cleanup();
     IMG_Quit();
     SDL_Quit();
@@ -69,8 +60,8 @@ void Game::run() {
                     break;
             }
 
-
             _camera.handleEvents(event);
+            _window.handleEvents(event);
             _manager.handleEvents(event);
 
         }
@@ -101,10 +92,6 @@ SDLWindow* Game::getWindowPtr() {
 
 GameStateManager& Game::getGameStateManager() {
     return _manager;
-}
-
-ResourceManager& Game::getResourceManager() {
-    return (*_resourceManager->getInstance());
 }
 
 Camera& Game::getCamera() {

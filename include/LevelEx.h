@@ -7,14 +7,12 @@
 using namespace Graphics;
 using std::vector;
 
-class ResourceManager;
-
 class LevelEx {
 
 public:
 
     LevelEx();
-    LevelEx(vector<vector<Block> >, vector<Block>, vector<Block>, Block, int, int, ResourceManager*);
+    LevelEx(vector<vector<Block> >, vector<Block>, vector<Block>, Block, int, int);
 
     vector<Block*> getVisibleBlocks(SDL_Rect);
 
@@ -49,8 +47,6 @@ private:
     vector<Block> _goals;
 
     vector<vector<Block> > _board;
-
-    ResourceManager* _resourceManager;
 };
 
 #endif

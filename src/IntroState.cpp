@@ -2,6 +2,7 @@
 #include "../include/SDLWindow.h"
 #include "../include/Game.h"
 #include "../include/PlayState.h"
+#include "../include/ResourceManager.h"
 
 IntroState* IntroState::_introState = nullptr;
 
@@ -17,10 +18,10 @@ void IntroState::init(GameStateManager* manager) {
 
     logInstance.log("getting star title texture");
 
-    _texture = _game->getResourceManager().getTexture("star_title.png");
+    _texture = ResourceManager::getInstance()->getTexture("star_title.png");
 
     logInstance.log("getting background texture");
-    _background = _game->getResourceManager().getTexture("cloud_background.png");
+    _background = ResourceManager::getInstance()->getTexture("cloud_background.png");
 
     _texture->setAlpha(0);
 
@@ -50,14 +51,12 @@ void IntroState::cleanup() {
 
 void IntroState::handleEvents(SDL_Event& event) {
 
-    _game->getWindowPtr()->handleEvents(event);
-
     if( event.type == SDL_KEYDOWN ) {
 
         switch( event.key.keysym.sym ) {
 
            case SDLK_RETURN:
-            _manager->changeState(PlayState::instance());
+            RequestChangeState((GameState*)this, (GameState*)PlayState::instance());
             break;
             case SDLK_UP:
 
