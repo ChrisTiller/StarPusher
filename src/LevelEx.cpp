@@ -13,6 +13,7 @@ LevelEx::LevelEx(vector<vector<Block> > board, vector<Block> stars, vector<Block
     _width = width;
     _height = height;
     _completed = false;
+    _stepCounter = 0;
 }
 
 vector<Block*> LevelEx::getVisibleBlocks(SDL_Rect rect) {
@@ -62,24 +63,28 @@ int LevelEx::getHeight() const {
 
 void LevelEx::movePlayerUp() {
     if (performMoveOperation(&Block::moveUp, &Block::moveDown)) {
+        _stepCounter++;
         checkForStarsOnGoals();
     }
 }
 
 void LevelEx::movePlayerDown() {
     if (performMoveOperation(&Block::moveDown, &Block::moveUp)) {
+        _stepCounter++;
         checkForStarsOnGoals();
     }
 }
 
 void LevelEx::movePlayerLeft() {  
     if (performMoveOperation(&Block::moveLeft, &Block::moveRight)) {
+        _stepCounter++;
         checkForStarsOnGoals();
     }
 }
 
 void LevelEx::movePlayerRight() {
     if (performMoveOperation(&Block::moveRight, &Block::moveLeft)) {
+        _stepCounter++;
         checkForStarsOnGoals();
     }
 }
@@ -113,21 +118,31 @@ bool LevelEx::performMoveOperation(void (Block::*actionToPerform)(), void (Block
 
     (_character.*actionToPerform)();
 
+    _moveStack.push_back(std::make_tuple(&_character, nullptr, actionToUndo));
+
     for (auto &block : getBlocksAtLocation(_character.getLocation())) {
 
         if (block->getBlockType() == BlockTypes::WALL) {
             (_character.*actionToUndo)();
+
+            _moveStack.pop_back();
 
             return false;
 
         } else if (block->getBlockType() == BlockTypes::STAR) {
             ((*block).*actionToPerform)();
 
+            _moveStack.pop_back();
+
+            _moveStack.push_back(std::make_tuple(&_character, block, actionToUndo));
+
             for (auto &block2 : getBlocksAtLocation(block->getLocation())) {
 
                 if (block2->getBlockType() == BlockTypes::WALL || (block2->getBlockType() == BlockTypes::STAR && block2 != block)) {
                     (_character.*actionToUndo)();
                     ((*block).*actionToUndo)();
+
+                    _moveStack.pop_back();
 
                     return false;
                 }
@@ -165,6 +180,29 @@ void LevelEx::checkForStarsOnGoals() {
         _completed = true;
     } else {
         _completed = false;
+    }
+
+}
+
+void LevelEx::undoLastMove() {
+
+    if (!_moveStack.empty()) {
+
+        std::tuple<Block*, Block*, void (Block::*)()> lastMove = _moveStack.at(_moveStack.size() - 1);
+
+        (*(Block*)std::get<0>(lastMove).*(std::get<2>(lastMove)))();
+
+        if ((Block*)std::get<1>(lastMove)) {
+            (*(Block*)std::get<1>(lastMove).*(std::get<2>(lastMove)))();
+            
+            checkForStarsOnGoals();
+
+        }
+
+        _stepCounter--;
+
+        _moveStack.pop_back();
+
     }
 
 }

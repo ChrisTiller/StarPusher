@@ -84,6 +84,9 @@ void PlayState::handleEvents(SDL_Event& event) {
                 centerCamera();
                 break;
 
+            case SDLK_z:
+                _currentLevel.undoLastMove();
+                break;
         }
     }
 }

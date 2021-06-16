@@ -10,7 +10,7 @@ SDLWindow::SDLWindow(string name, int width, int height)
     _width = width;
     _height = height;
 
-    _window = SDL_CreateWindow(_windowName.c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, _width, _height, SDL_WINDOW_SHOWN);
+    _window = SDL_CreateWindow(_windowName.c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, _width, _height, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
 
     if (!_window) {
         printf("Window Creation Failed! SDL Error: %s\n", SDL_GetError());
@@ -44,11 +44,17 @@ SDLWindow::~SDLWindow() {
 }
 
 int SDLWindow::getWidth() const {
-    return _width;
+    int w = 0;
+    int h = 0;
+    SDL_GetWindowSize(_window , &w, &h);
+    return w;
 }
 
 int SDLWindow::getHeight() const {
-    return _height;
+    int w = 0;
+    int h = 0;
+    SDL_GetWindowSize(_window , &w, &h);
+    return h;
 }
 
 void SDLWindow::focus() {

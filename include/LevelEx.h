@@ -1,6 +1,7 @@
 #ifndef LEVELEX_H
 #define LEVELEX_H
 
+#include <tuple>
 #include <vector>
 #include "Block.h"
 
@@ -26,6 +27,8 @@ public:
     void movePlayerLeft();
     void movePlayerRight();
 
+    void undoLastMove();
+
 private:
 
     vector<Block*> getBlocksAtLocation(Point);
@@ -39,6 +42,8 @@ private:
     int _width;
     int _height;
 
+    int _stepCounter;
+
     bool _completed;
 
     Block _character;
@@ -47,6 +52,8 @@ private:
     vector<Block> _goals;
 
     vector<vector<Block> > _board;
+
+    vector<std::tuple<Block*, Block*, void (Block::*)()> > _moveStack;
 };
 
 #endif

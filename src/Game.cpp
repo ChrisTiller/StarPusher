@@ -56,7 +56,7 @@ void Game::run() {
 
             switch (event.key.keysym.sym) {
                 case SDLK_ESCAPE:
-                    quit();
+                    //quit();
                     break;
             }
 
