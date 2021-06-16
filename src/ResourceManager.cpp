@@ -95,7 +95,7 @@ void ResourceManager::readAllLevels(std::string fileName) {
     std::string line;
     int levelCounter = 1;
 
-    vector<string> rawLevel;
+    std::vector<string> rawLevel;
 
     while (getline(levelsFile, line)) {
 
@@ -142,21 +142,21 @@ void ResourceManager::loadLevel(int levelNumber) {
         return;
     }
 
-    vector<string> rawLevel = it->second;
+    std::vector<string> rawLevel = it->second;
 
-    Block character;
+    Graphics::Block character;
 
-    vector<Block> stars;
-    vector<Block> goals;
+    std::vector<Graphics::Block> stars;
+    std::vector<Graphics::Block> goals;
 
-    vector<vector<Block> > board;
+    std::vector<std::vector<Graphics::Block> > board;
 
     int width = 0;
     int height = rawLevel.size();
 
-    vector<Block> currentRow;
+    std::vector<Graphics::Block> currentRow;
 
-    vector<string>::iterator it2;
+    std::vector<string>::iterator it2;
 
     int xLocation = 0;
     int yLocation = 0;
@@ -175,41 +175,41 @@ void ResourceManager::loadLevel(int levelNumber) {
             
             switch (*rowIt) {
                 case ' ':
-                    currentRow.push_back(Block(BlockTypes::NONE, NULL, xLocation, yLocation));
+                    currentRow.push_back(Graphics::Block(Graphics::BlockTypes::NONE, NULL, xLocation, yLocation));
                     break;
                 case '#':
-                    currentRow.push_back(Block(BlockTypes::WALL, _instance->getTexture("Wood_Block_Tall.png"), xLocation, yLocation));
+                    currentRow.push_back(Graphics::Block(Graphics::BlockTypes::WALL, _instance->getTexture("Wood_Block_Tall.png"), xLocation, yLocation));
                     break;
                 case 'G':
-                    currentRow.push_back(Block(BlockTypes::GRASS, _instance->getTexture("Grass_Block.png"), xLocation, yLocation));
+                    currentRow.push_back(Graphics::Block(Graphics::BlockTypes::GRASS, _instance->getTexture("Grass_Block.png"), xLocation, yLocation));
                     break;
                 case '$':
-                    currentRow.push_back(Block(BlockTypes::NONE, NULL, xLocation, yLocation));
-                    stars.push_back(Block(BlockTypes::STAR, _instance->getTexture("Star.png"), xLocation, yLocation));
+                    currentRow.push_back(Graphics::Block(Graphics::BlockTypes::NONE, NULL, xLocation, yLocation));
+                    stars.push_back(Graphics::Block(Graphics::BlockTypes::STAR, _instance->getTexture("Star.png"), xLocation, yLocation));
                     break;
                 case '.':
-                    currentRow.push_back(Block(BlockTypes::NONE, NULL, xLocation, yLocation));
-                    goals.push_back(Block(BlockTypes::GOAL, _instance->getTexture("RedSelector.png"), xLocation, yLocation));
+                    currentRow.push_back(Graphics::Block(Graphics::BlockTypes::NONE, NULL, xLocation, yLocation));
+                    goals.push_back(Graphics::Block(Graphics::BlockTypes::GOAL, _instance->getTexture("RedSelector.png"), xLocation, yLocation));
                     break;
                 case '*':
-                    currentRow.push_back(Block(BlockTypes::NONE, NULL, xLocation, yLocation));
-                    goals.push_back(Block(BlockTypes::GOAL, _instance->getTexture("Selector.png"), xLocation, yLocation));
+                    currentRow.push_back(Graphics::Block(Graphics::BlockTypes::NONE, NULL, xLocation, yLocation));
+                    goals.push_back(Graphics::Block(Graphics::BlockTypes::GOAL, _instance->getTexture("Selector.png"), xLocation, yLocation));
 
-                    stars.push_back(Block(BlockTypes::STAR, _instance->getTexture("Star.png"), xLocation, yLocation));
+                    stars.push_back(Graphics::Block(Graphics::BlockTypes::STAR, _instance->getTexture("Star.png"), xLocation, yLocation));
                     break;
                 case '@':
-                    currentRow.push_back(Block(BlockTypes::NONE, NULL, xLocation, yLocation));
-                    character = Block(BlockTypes::PLAYER, _instance->getTexture("boy.png"), xLocation, yLocation);
+                    currentRow.push_back(Graphics::Block(Graphics::BlockTypes::NONE, NULL, xLocation, yLocation));
+                    character = Graphics::Block(Graphics::BlockTypes::PLAYER, _instance->getTexture("boy.png"), xLocation, yLocation);
                     break;
                 case '+':
-                    currentRow.push_back(Block(BlockTypes::NONE, NULL, xLocation, yLocation));
+                    currentRow.push_back(Graphics::Block(Graphics::BlockTypes::NONE, NULL, xLocation, yLocation));
 
-                    goals.push_back(Block(BlockTypes::GOAL, _instance->getTexture("RedSelector.png"), xLocation, yLocation));
+                    goals.push_back(Graphics::Block(Graphics::BlockTypes::GOAL, _instance->getTexture("RedSelector.png"), xLocation, yLocation));
 
-                    character = Block(BlockTypes::PLAYER, _instance->getTexture("boy.png"), xLocation, yLocation);
+                    character = Graphics::Block(Graphics::BlockTypes::PLAYER, _instance->getTexture("boy.png"), xLocation, yLocation);
                     break;
                 case 'F':
-                    currentRow.push_back(Block(BlockTypes::NONE, NULL, xLocation, yLocation));
+                    currentRow.push_back(Graphics::Block(Graphics::BlockTypes::NONE, NULL, xLocation, yLocation));
                     break;
             }
 
@@ -237,19 +237,19 @@ void ResourceManager::loadLevel(int levelNumber) {
 
 }
 
-void ResourceManager::squareLevel(vector<vector<Block> > &board, int width) {
+void ResourceManager::squareLevel(std::vector<std::vector<Graphics::Block> > &board, int width) {
 
     int y = 0;
 
     for (auto &outer : board) {
         while (outer.size() < width) {
-            outer.push_back(Block(BlockTypes::NONE, NULL, outer.size() * 50, y * 40));
+            outer.push_back(Graphics::Block(Graphics::BlockTypes::NONE, NULL, outer.size() * 50, y * 40));
         }
         y++;
     }
 }
 
-void ResourceManager::populateFloor(vector<vector<Block> > &board, int startX, int startY) {
+void ResourceManager::populateFloor(std::vector<std::vector<Graphics::Block> > &board, int startX, int startY) {
 
     if (startX >= board.at(0).size() || startY >= board.size()) {
         return;
@@ -259,11 +259,11 @@ void ResourceManager::populateFloor(vector<vector<Block> > &board, int startX, i
         return;
     }
 
-    Block existingBlock = board.at(startY).at(startX);
+    Graphics::Block existingBlock = board.at(startY).at(startX);
 
-    if (existingBlock.getBlockType() == BlockTypes::NONE) {
+    if (existingBlock.getBlockType() == Graphics::BlockTypes::NONE) {
 
-        board[startY][startX] = Block(BlockTypes::FLOOR, _instance->getTexture("Plain_Block.png"), existingBlock.getLocation());
+        board[startY][startX] = Graphics::Block(Graphics::BlockTypes::FLOOR, _instance->getTexture("Plain_Block.png"), existingBlock.getLocation());
 
         populateFloor(board, startX - 1, startY);
         populateFloor(board, startX, startY - 1);
@@ -274,13 +274,13 @@ void ResourceManager::populateFloor(vector<vector<Block> > &board, int startX, i
     
 }
 
-void ResourceManager::populateGrass(vector<vector<Block> > &board) {
+void ResourceManager::populateGrass(std::vector<std::vector<Graphics::Block> > &board) {
 
     for (auto &outer : board) {
 
         for (auto &inner : outer) {
-            if (inner.getBlockType() == BlockTypes::NONE) {
-                inner = Block(BlockTypes::FLOOR, _instance->getTexture("Grass_Block.png"), inner.getLocation());
+            if (inner.getBlockType() == Graphics::BlockTypes::NONE) {
+                inner = Graphics::Block(Graphics::BlockTypes::FLOOR, _instance->getTexture("Grass_Block.png"), inner.getLocation());
             }
         }
 

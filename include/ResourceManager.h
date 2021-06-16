@@ -5,6 +5,7 @@
 #include <map>
 #include <string>
 #include <system_error>
+#include <vector>
 #include "SDL2/SDL.h"
 #include "SDL2/SDL_image.h"
 #include "SDL2/SDL_ttf.h"
@@ -63,16 +64,16 @@ private:
 
     std::map<std::string, std::unique_ptr<Texture> > _myTextures;
 
-    std::map<int, vector<std::string > > _rawLevels;
+    std::map<int, std::vector<std::string > > _rawLevels;
     std::map<int, LevelEx> _levels;
 
     SDL_Renderer* _renderer;
 
     std::string _resourcePath;
 
-    void squareLevel(vector<vector<Block> >&, int);
-    void populateFloor(vector<vector<Block> >&, int, int);
-    void populateGrass(vector<vector<Block> >&);
+    void squareLevel(std::vector<std::vector<Graphics::Block> >&, int);
+    void populateFloor(std::vector<std::vector<Graphics::Block> >&, int, int);
+    void populateGrass(std::vector<std::vector<Graphics::Block> >&);
     static ResourceManager* _instance;
 };
 

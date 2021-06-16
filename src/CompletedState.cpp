@@ -79,10 +79,6 @@ void CompletedState::update() {
 
 void CompletedState::draw() {
 
-    //_window->clear();
-
     //_window->placeTexture(&_background, 0, 0);
-
-    //_window->render();
 
 }

@@ -68,7 +68,12 @@ void Game::run() {
 
         _manager.update();
         _camera.update();
+
+        _window.clear();
+
         _manager.draw();
+
+        _window.render();
 
         Uint32 endingTicks = SDL_GetTicks() - startingTicks;
         if ( endingTicks < SCREEN_TICKS_PER_SECOND ){

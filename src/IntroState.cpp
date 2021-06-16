@@ -86,10 +86,7 @@ void IntroState::update() {
 
 void IntroState::draw() {
 
-    _window->clear();
-
     //_window->placeTexture(_background, NULL, NULL);
     _window->placeTexture(_texture, NULL, &textRect);
-
-    _window->render();
+    
 }

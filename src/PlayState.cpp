@@ -93,14 +93,14 @@ void PlayState::handleEvents(SDL_Event& event) {
 
 void PlayState::update() {
 
-    if  (_levelCompleted) {
-        _manager->changeState(CompletedState::instance());
+    if (_currentLevel.isCompleted()) {
+        goToNextLevel();
+        centerCamera();
     }
+
 }
 
 void PlayState::draw() {
-
-    _window->clear();
 
     SDL_Rect rct = _game->getCamera().getRect();
 
@@ -112,13 +112,7 @@ void PlayState::draw() {
 
         blockToRender = nullptr;
     }
-
-    _window->render();
-
-    if (_currentLevel.isCompleted()) {
-        goToNextLevel();
-        centerCamera();
-    }
+    
 }
 
 void PlayState::goToPreviousLevel() {
