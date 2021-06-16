@@ -22,6 +22,8 @@ public:
     virtual void draw() = 0;
     
     Event<GameState*, GameState*> RequestChangeState;
+    Event<GameState*> RequestPopState;
+    
 
 protected:
     

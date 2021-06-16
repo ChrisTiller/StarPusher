@@ -1,7 +1,8 @@
 #include "../include/GameStateManager.h"
 
 GameStateManager::GameStateManager(Game* game) 
-    : changeHandler(std::bind(&GameStateManager::RequestChangeState, this, std::placeholders::_1, std::placeholders::_2)) { 
+    : changeHandler(std::bind(&GameStateManager::RequestChangeState, this, std::placeholders::_1, std::placeholders::_2)),
+      popHandler(std::bind(&GameStateManager::RequestPopState, this, std::placeholders::_1)) { 
         
     _game = game; 
 };
@@ -12,10 +13,15 @@ void GameStateManager::RequestChangeState(GameState* src, GameState* dst) {
     changeState(dst);
 }
 
+void GameStateManager::RequestPopState(GameState* src) {
+    popState();
+}
+
 void GameStateManager::changeState(GameState* state) {
 
     if (!_states.empty()) {
         _states.back()->RequestChangeState -= changeHandler;
+        _states.back()->RequestPopState -= popHandler;
         _states.back()->cleanup();
         _states.pop_back();
     }
@@ -23,6 +29,7 @@ void GameStateManager::changeState(GameState* state) {
     _states.push_back(state);
     _states.back()->init(this);
     _states.back()->RequestChangeState += changeHandler;
+    _states.back()->RequestPopState += popHandler;
 }
 
 void GameStateManager::pushState(GameState* state) {
@@ -34,12 +41,14 @@ void GameStateManager::pushState(GameState* state) {
     _states.push_back(state);
     _states.back()->init(this);
     _states.back()->RequestChangeState += changeHandler;
+    _states.back()->RequestPopState += popHandler;
 }
 
 void GameStateManager::popState() {
 
     if (!_states.empty()) {
         _states.back()->RequestChangeState -= changeHandler;
+        _states.back()->RequestPopState -= popHandler;
         _states.back()->cleanup();
         _states.pop_back();
     }
@@ -64,8 +73,9 @@ void GameStateManager::update() {
 
 void GameStateManager::draw() {
 
-    _states.back()->draw();
-
+    for(auto state = _states.begin(); state != _states.end(); state++) {
+        _states.back()->draw();
+    }
 }
 
 Game& GameStateManager::getGame() {
@@ -75,6 +85,8 @@ Game& GameStateManager::getGame() {
 void GameStateManager::cleanup() {
 
     while (!_states.empty() && _states.back()) {
+        _states.back()->RequestChangeState -= changeHandler;
+        _states.back()->RequestPopState -= popHandler;
         _states.back()->cleanup();
         _states.pop_back();
     }

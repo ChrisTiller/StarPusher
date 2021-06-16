@@ -5,17 +5,14 @@
 #include <vector>
 #include "Block.h"
 
-using namespace Graphics;
-using std::vector;
-
 class LevelEx {
 
 public:
 
     LevelEx();
-    LevelEx(vector<vector<Block> >, vector<Block>, vector<Block>, Block, int, int);
+    LevelEx(std::vector<std::vector<Graphics::Block> >, std::vector<Graphics::Block>, std::vector<Graphics::Block>, Graphics::Block, int, int);
 
-    vector<Block*> getVisibleBlocks(SDL_Rect);
+    std::vector<Graphics::Block*> getVisibleBlocks(SDL_Rect);
 
     int getWidth() const;
     int getHeight() const;
@@ -31,9 +28,9 @@ public:
 
 private:
 
-    vector<Block*> getBlocksAtLocation(Point);
+    std::vector<Graphics::Block*> getBlocksAtLocation(Graphics::Point);
 
-    bool performMoveOperation(void (Block::*)(), void (Block::*)());
+    bool performMoveOperation(void (Graphics::Block::*)(), void (Graphics::Block::*)());
 
     void checkForStarsOnGoals();
 
@@ -46,14 +43,14 @@ private:
 
     bool _completed;
 
-    Block _character;
+    Graphics::Block _character;
 
-    vector<Block> _stars;
-    vector<Block> _goals;
+    std::vector<Graphics::Block> _stars;
+    std::vector<Graphics::Block> _goals;
 
-    vector<vector<Block> > _board;
+    std::vector<std::vector<Graphics::Block> > _board;
 
-    vector<std::tuple<Block*, Block*, void (Block::*)()> > _moveStack;
+    std::vector<std::tuple<Graphics::Block*, Graphics::Block*, void (Graphics::Block::*)()> > _moveStack;
 };
 
 #endif
