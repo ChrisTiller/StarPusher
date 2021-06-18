@@ -12,29 +12,29 @@ void IntroState::init(GameStateManager* manager) {
 
     _game = &_manager->getGame();
 
-    _window = _manager->getGame().getWindowPtr();
+    window_ = _manager->getGame().getWindowPtr();
 
     logInstance.setFileName("test");
 
     logInstance.log("getting star title texture");
 
-    _texture = ResourceManager::getInstance()->getTexture("star_title.png");
+    texture_ = ResourceManager::getInstance()->getTexture("star_title.png");
 
     logInstance.log("getting background texture");
     _background = ResourceManager::getInstance()->getTexture("cloud_background.png");
 
-    _texture->setAlpha(0);
+    texture_->setAlpha(0);
 
     _alpha = 0;
 
-    textRect.x = ( _window->getWidth() / 2 ) - ( _texture->getWidth() / 2 );
-    textRect.y = ( _window->getHeight() / 2 ) - ( _texture->getHeight() / 2 );
-    textRect.w = _texture->getWidth();
-    textRect.h = _texture->getHeight();
+    textRect.x = ( window_->getWidth() / 2 ) - ( texture_->getWidth() / 2 );
+    textRect.y = ( window_->getHeight() / 2 ) - ( texture_->getHeight() / 2 );
+    textRect.w = texture_->getWidth();
+    textRect.h = texture_->getHeight();
 
     _game->getCamera().setUse(false);
 
-    _window->setDrawColor(0x1E,0x09,255);
+    window_->setDrawColor(0x1E,0x09, 255, 255);
 }
 
 void IntroState::cleanup() {
@@ -42,7 +42,7 @@ void IntroState::cleanup() {
     if (_introState) {
         _manager = nullptr;
         _game = nullptr;
-        _window = nullptr;
+        window_ = nullptr;
     
         delete _introState;
         _introState = nullptr;
@@ -75,7 +75,7 @@ void IntroState::update() {
 
          _alpha+=2;
 
-        _texture->setAlpha(_alpha);
+        texture_->setAlpha(_alpha);
 
     } else {
         _alpha = 254;
@@ -86,7 +86,7 @@ void IntroState::update() {
 
 void IntroState::draw() {
 
-    //_window->placeTexture(_background, NULL, NULL);
-    _window->placeTexture(_texture, NULL, &textRect);
+    //window_->placeTexture(_background, NULL, NULL);
+    window_->placeTexture(texture_, NULL, &textRect);
     
 }

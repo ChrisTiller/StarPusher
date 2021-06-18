@@ -4,67 +4,66 @@
 #include <iostream>
 
 SDLWindow::SDLWindow(string name, int width, int height)
-    : _r(255), _g(255), _b(255) {
+    : clear_color_(135,206,250), draw_color_(known_colors::kBlack) {
 
     _windowName = name;
     _width = width;
     _height = height;
 
-    _window = SDL_CreateWindow(_windowName.c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, _width, _height, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
+    window_ = SDL_CreateWindow(_windowName.c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, _width, _height, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
 
-    if (!_window) {
+    if (!window_) {
         printf("Window Creation Failed! SDL Error: %s\n", SDL_GetError());
 
         return;
     }
 
-    _renderer = SDL_CreateRenderer(_window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+    renderer_ = SDL_CreateRenderer(window_, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 
-    if (!_renderer) {
+    if (!renderer_) {
         printf("Renderer Creation Failed! SDL Error %s\n", SDL_GetError());
-        SDL_DestroyWindow(_window);
-        _window = NULL;
+        SDL_DestroyWindow(window_);
+        window_ = NULL;
 
         return;
     }
 
+    SDL_SetRenderDrawBlendMode(renderer_, SDL_BLENDMODE_BLEND);
+
     _shown = true;
     _minimized = false;
-
-    _a = 255;
-
 }
 
 SDLWindow::~SDLWindow() {
-    SDL_DestroyRenderer(_renderer);
-    SDL_DestroyWindow(_window);
+    SDL_DestroyRenderer(renderer_);
+    SDL_DestroyWindow(window_);
 
-    _renderer = NULL;
-    _window = NULL;
+    renderer_ = NULL;
+    window_ = NULL;
 }
 
 int SDLWindow::getWidth() const {
     int w = 0;
     int h = 0;
-    SDL_GetWindowSize(_window , &w, &h);
+    SDL_GetWindowSize(window_ , &w, &h);
     return w;
 }
 
 int SDLWindow::getHeight() const {
     int w = 0;
     int h = 0;
-    SDL_GetWindowSize(_window , &w, &h);
+    SDL_GetWindowSize(window_ , &w, &h);
     return h;
 }
 
 void SDLWindow::focus() {
 
     if (!_shown) {
-        SDL_ShowWindow(_window);
+        SDL_ShowWindow(window_);
         _shown = true;
     }
 
-    SDL_RaiseWindow(_window);
+    SDL_RaiseWindow(window_);
 
 }
 
@@ -80,7 +79,7 @@ void SDLWindow::handleEvents(SDL_Event& event) {
             _shown = false;
             break;
         case SDL_WINDOWEVENT_EXPOSED:
-            SDL_RenderPresent(_renderer);
+            SDL_RenderPresent(renderer_);
             break;
         case SDL_WINDOWEVENT_MINIMIZED:
             _minimized = true;
@@ -91,7 +90,14 @@ void SDLWindow::handleEvents(SDL_Event& event) {
         case SDL_WINDOWEVENT_RESTORED:
             _minimized = false;
             break;
+        case SDL_WINDOWEVENT_RESIZED:
+            int w;
+            int h;
 
+            SDL_GetWindowSize(window_, &w, &h);
+
+            WindowSizeChanged(w, h);
+            break;
     }
 
 }
@@ -99,16 +105,17 @@ void SDLWindow::handleEvents(SDL_Event& event) {
 void SDLWindow::clear() {
 
      if (!_minimized) {
-        SDL_SetRenderDrawColor(_renderer, _r, _g, _b, _a);
-        SDL_RenderClear(_renderer);
-        SDL_RenderFillRect(_renderer, NULL);
+        SDL_SetRenderDrawColor(renderer_, clear_color_.r, clear_color_.g, clear_color_.b, clear_color_.a);
+        SDL_RenderClear(renderer_);
+        SDL_RenderFillRect(renderer_, NULL);
+        SDL_SetRenderDrawColor(renderer_, draw_color_.r, draw_color_.g, draw_color_.b, draw_color_.a);
     }
 }
 
 void SDLWindow::placeTexture(Texture* texture, SDL_Rect* src, SDL_Rect* dst) {
 
     if (!_minimized) {
-        SDL_RenderCopy(_renderer, texture->getTexture(), src, dst);
+        SDL_RenderCopy(renderer_, texture->getTexture(), src, dst);
     }
 
 }
@@ -129,39 +136,46 @@ void SDLWindow::placeTexture(Texture* texture, int x, int y, SDL_Rect* clip) {
 void SDLWindow::render() {
 
     if (!_minimized) {
-        SDL_RenderPresent(_renderer);
+        SDL_RenderPresent(renderer_);
     }
 }
 
-void SDLWindow::setDrawColor(int r, int g, int b) {
-    _r = r;
-    _g = g;
-    _b = b;
+void SDLWindow::setClearColor(const Color& new_color) {
+    clear_color_.r = new_color.r;
+    clear_color_.g = new_color.g;
+    clear_color_.b = new_color.b;
+    clear_color_.a = new_color.a;
+}
+
+void SDLWindow::setClearColor(int r, int g, int b, int a) {
+    clear_color_.r = r;
+    clear_color_.g = g;
+    clear_color_.b = b;
+    clear_color_.a = a;
+}
+
+void SDLWindow::setDrawColor(const Color& new_color) {
+    draw_color_.r = new_color.r;
+    draw_color_.g = new_color.g;
+    draw_color_.b = new_color.b;
+    draw_color_.a = new_color.a;
+
+    SDL_SetRenderDrawColor(renderer_, draw_color_.r, draw_color_.g, draw_color_.b, draw_color_.a);
 }
 
 void SDLWindow::setDrawColor(int r, int g, int b, int a) {
-    _r = r;
-    _g = g;
-    _b = b;
-    _a = a;
+    draw_color_.r = r;
+    draw_color_.g = g;
+    draw_color_.b = b;
+    draw_color_.a = a;
+
+    SDL_SetRenderDrawColor(renderer_, draw_color_.r, draw_color_.g, draw_color_.b, draw_color_.a);
 }
 
 SDL_Renderer* SDLWindow::getRenderer() const {
-    return _renderer;
+    return renderer_;
 }
 
-// void SDLWindow::setTarget(Texture& target) {
-
-
-//      target.setTexture(SDL_CreateTexture(_renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, _width, _height));
-
-//      if (target.getTexture() == NULL) {
-//         std::cout << "Unable to create blank texture. SDL_Error: " << SDL_GetError() << std::endl;
-//     }
-
-//     SDL_SetRenderTarget(_renderer, target.getTexture());
-// }
-
 void SDLWindow::setDefaultTarget() {
-    SDL_SetRenderTarget(_renderer, NULL);
+    SDL_SetRenderTarget(renderer_, NULL);
 }

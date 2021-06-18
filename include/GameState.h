@@ -20,10 +20,10 @@ public:
     virtual void handleEvents( SDL_Event&) = 0;
     virtual void update() = 0;
     virtual void draw() = 0;
-    
+
     Event<GameState*, GameState*> RequestChangeState;
+    Event<GameState*, GameState*> RequestPushState;
     Event<GameState*> RequestPopState;
-    
 
 protected:
     

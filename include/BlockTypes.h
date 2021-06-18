@@ -4,13 +4,13 @@
 namespace Graphics {
 
     enum BlockTypes {
-        WALL,
-        STAR,
-        PLAYER,
-        GOAL,
-        FLOOR,
-        GRASS,
-        NONE
+        kWall,
+        kStar,
+        kPlayer,
+        kGoal,
+        kFloor,
+        kGrass,
+        kNone
     };
 
 }

@@ -38,8 +38,8 @@ private:
     static IntroState* _introState;
 
     Game* _game;
-    SDLWindow* _window;
-    Texture* _texture;
+    SDLWindow* window_;
+    Texture* texture_;
     Texture* _background;
 
     Uint8 _alpha;

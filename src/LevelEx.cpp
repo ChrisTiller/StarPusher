@@ -16,32 +16,32 @@ LevelEx::LevelEx(std::vector<std::vector<Graphics::Block> > board, std::vector<G
     _stepCounter = 0;
 }
 
-std::vector<Graphics::Block*> LevelEx::getVisibleBlocks(SDL_Rect rect) {
+std::vector<Graphics::Block*> LevelEx::getVisibleBlocks(const SDL_Rect& rect) {
 
     std::vector<Graphics::Block*> result;
 
-    for (auto &outer : _board) {
+    for (auto &row : _board) {
 
-        for (auto &inner : outer) {
+        for (auto &block : row) {
 
-            if (inner.getBlockType() != Graphics::BlockTypes::NONE) {
-                if (inner.intersects(rect)) {
+            if (block.getBlockType() != Graphics::BlockTypes::kNone) {
+                if (block.intersects(rect)) {
                     
-                    result.push_back(&inner);
+                    result.push_back(&block);
 
                     for (auto &goalsIs : _goals) {
-                        if (goalsIs.getLocation() == inner.getLocation()) {
+                        if (goalsIs.getLocation() == block.getLocation()) {
                             result.push_back(&goalsIs);
                         }
                     }
 
                     for (auto &starsIt : _stars) {
-                        if (starsIt.getLocation() == inner.getLocation()) {
+                        if (starsIt.getLocation() == block.getLocation()) {
                             result.push_back(&starsIt);
                         }
                     }
 
-                    if (_character.getLocation() == inner.getLocation()) {
+                    if (_character.getLocation() == block.getLocation()) {
                         result.push_back(&_character);
                     }
                 }
@@ -93,7 +93,7 @@ bool LevelEx::isCompleted() const {
     return _completed;
 }
 
-std::vector<Graphics::Block*> LevelEx::getBlocksAtLocation(Graphics::Point p) {
+std::vector<Graphics::Block*> LevelEx::getBlocksAtLocation(const Point& p) {
 
     std::vector<Graphics::Block*> result;
 
@@ -122,14 +122,14 @@ bool LevelEx::performMoveOperation(void (Graphics::Block::*actionToPerform)(), v
 
     for (auto &block : getBlocksAtLocation(_character.getLocation())) {
 
-        if (block->getBlockType() == Graphics::BlockTypes::WALL) {
+        if (block->getBlockType() == Graphics::BlockTypes::kWall) {
             (_character.*actionToUndo)();
 
             _moveStack.pop_back();
 
             return false;
 
-        } else if (block->getBlockType() == Graphics::BlockTypes::STAR) {
+        } else if (block->getBlockType() == Graphics::BlockTypes::kStar) {
             ((*block).*actionToPerform)();
 
             _moveStack.pop_back();
@@ -138,7 +138,7 @@ bool LevelEx::performMoveOperation(void (Graphics::Block::*actionToPerform)(), v
 
             for (auto &block2 : getBlocksAtLocation(block->getLocation())) {
 
-                if (block2->getBlockType() == Graphics::BlockTypes::WALL || (block2->getBlockType() == Graphics::BlockTypes::STAR && block2 != block)) {
+                if (block2->getBlockType() == Graphics::BlockTypes::kWall || (block2->getBlockType() == Graphics::BlockTypes::kStar && block2 != block)) {
                     (_character.*actionToUndo)();
                     ((*block).*actionToUndo)();
 
@@ -162,12 +162,12 @@ void LevelEx::checkForStarsOnGoals() {
 
     for (auto &goal : _goals) {
 
-        goal = Graphics::Block(Graphics::BlockTypes::GOAL, ResourceManager::getInstance()->getTexture("RedSelector.png"), goal.getLocation());
+        goal = Graphics::Block(Graphics::BlockTypes::kGoal, ResourceManager::getInstance()->getTexture("RedSelector.png"), goal.getLocation());
 
         for (auto &block : getBlocksAtLocation(goal.getLocation())) {
 
-            if (block->getBlockType() == Graphics::BlockTypes::STAR) {
-                goal = Graphics::Block(Graphics::BlockTypes::GOAL, ResourceManager::getInstance()->getTexture("Selector.png"), goal.getLocation());
+            if (block->getBlockType() == Graphics::BlockTypes::kStar) {
+                goal = Graphics::Block(Graphics::BlockTypes::kGoal, ResourceManager::getInstance()->getTexture("Selector.png"), goal.getLocation());
 
                 starsOnGoalsCounter++;
             }

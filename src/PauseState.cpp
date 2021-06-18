@@ -1,29 +1,45 @@
 #include "../include/PauseState.h"
+#include "../include/GameStateManager.h"
+#include "../include/Game.h"
 
-PauseState* PauseState::_instance = NULL;
+PauseState* PauseState::instance_ = NULL;
 
 PauseState::PauseState() {
-     _game = nullptr; 
-     _window = nullptr;
+    _game = nullptr; 
+    window_ = nullptr;
+
+    //_menuRect.backgroundColor()->setAlpha(190);
+    _menuRect.background_color_.a = 190;
+    //_menuRect.backgroundColor3().setAlpha(190);
+    _menuRect.setLocation(100, 0);
 }
 
 PauseState::~PauseState() {
     _game = nullptr; 
-     _window = nullptr;
+     window_ = nullptr;
 }
 
 PauseState* PauseState::instance()  {
-        if (!_instance) {
-            _instance = new PauseState;
+        if (!instance_) {
+            instance_ = new PauseState;
         }
-        return _instance;
+        return instance_;
     }
 
-void PauseState::init(GameStateManager*) {
+void PauseState::init(GameStateManager* manager) {
+    _manager = manager;
 
+    _game = &_manager->getGame();
+
+    window_ = _game->getWindowPtr();
 }
 
 void PauseState::cleanup() {
+
+    if (instance_) {
+        delete instance_;
+        instance_ = nullptr;
+    }
 
 }
 
@@ -54,5 +70,9 @@ void PauseState::update() {
 }
 
 void PauseState::draw() {
+
+    _menuRect.setSize(300, window_->getHeight());
+
+    _menuRect.draw(window_->getRenderer());
 
 }

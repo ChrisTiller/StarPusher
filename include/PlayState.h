@@ -17,8 +17,8 @@ public:
     void init(GameStateManager*);
     void cleanup();
 
-    void pause() {}
-    void resume() {}
+    void pause();
+    void resume();
 
     void handleEvents(SDL_Event&);
     void update();
@@ -46,7 +46,7 @@ private:
     LevelEx _currentLevel;
 
     Game* _game;
-    SDLWindow* _window;
+    SDLWindow* window_;
 
     bool _levelCompleted;
 

@@ -18,26 +18,26 @@ class ResourceManager {
 public:
 
     static ResourceManager* getInstance() {
-        if (!_instance) {
+        if (!instance_) {
             logInstance.log("New Resource Manager");
-            _instance = new ResourceManager();
+            instance_ = new ResourceManager();
         }
-        return _instance;
+        return instance_;
     }
 
     void cleanUp();
 
-    Texture* getTexture(const std::string);
-    TTF_Font* getFont(const std::string, int);
+    Texture* getTexture(const std::string&);
+    TTF_Font* getFont(const std::string&, int);
 
-    void setResourcePath(const std::string);
+    void setResourcePath(const std::string&);
     void setRenderer(SDL_Renderer*);
 
     void loadAllResources();
-    bool loadTexture(const std::string);
-    bool isTextureLoaded(const std::string);
+    bool loadTexture(const std::string&);
+    bool isTextureLoaded(const std::string&);
     
-    void readAllLevels(std::string);
+    void readAllLevels(const std::string&);
     void loadLevel(int);
     bool isLevelLoaded(int);
 
@@ -60,21 +60,21 @@ private:
 
     using FontPtr = std::unique_ptr<TTF_Font, void(*)(TTF_Font*)>;
 
-    std::map<std::string, FontPtr > _fonts;
+    std::map<std::string, FontPtr > fonts_;
 
-    std::map<std::string, std::unique_ptr<Texture> > _myTextures;
+    std::map<std::string, std::unique_ptr<Texture> > myTextures_;
 
-    std::map<int, std::vector<std::string > > _rawLevels;
-    std::map<int, LevelEx> _levels;
+    std::map<int, std::vector<std::string > > rawLevels_;
+    std::map<int, LevelEx> levels_;
 
-    SDL_Renderer* _renderer;
+    SDL_Renderer* renderer_;
 
-    std::string _resourcePath;
+    std::string resourcePath_;
 
     void squareLevel(std::vector<std::vector<Graphics::Block> >&, int);
     void populateFloor(std::vector<std::vector<Graphics::Block> >&, int, int);
     void populateGrass(std::vector<std::vector<Graphics::Block> >&);
-    static ResourceManager* _instance;
+    static ResourceManager* instance_;
 };
 
 

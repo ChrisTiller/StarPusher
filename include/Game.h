@@ -30,7 +30,7 @@ public:
 
 private:
 
-    SDLWindow  _window;
+    SDLWindow  window_;
 
     GameStateManager _manager;
     Camera _camera;

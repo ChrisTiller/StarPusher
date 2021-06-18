@@ -13,13 +13,13 @@ void CompletedState::init(GameStateManager* manager) {
 
     _game = &_manager->getGame();
 
-    SDLWindow* _window = _game->getWindowPtr();
+    SDLWindow* window_ = _game->getWindowPtr();
 
-    _window->setDrawColor(0, 0, 0, 255);
+    window_->setDrawColor(0, 0, 0, 255);
 
-    _window->clear();
+    window_->clear();
 
-    _window->render();
+    window_->render();
 
 }
 
@@ -79,6 +79,6 @@ void CompletedState::update() {
 
 void CompletedState::draw() {
 
-    //_window->placeTexture(&_background, 0, 0);
+    //window_->placeTexture(&_background, 0, 0);
 
 }

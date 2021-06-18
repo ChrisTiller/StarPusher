@@ -8,7 +8,6 @@ class Camera {
 
 public:
 
-	Camera();
 	Camera(SDLWindow*);
 
 	void handleEvents(SDL_Event&);
@@ -27,7 +26,7 @@ public:
 
 private:
 
-	SDLWindow* _window;
+	SDLWindow* window_;
 
 	int _posX;
 	int _posY;

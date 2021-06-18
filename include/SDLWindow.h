@@ -1,17 +1,18 @@
 #ifndef SDLWINDOW_H
 #define SDLWINDOW_H
 
-#include "SDL2/SDL.h"
 #include <string>
+#include "SDL2/SDL.h"
 
-using std::string;
+#include "Event.h"
+#include "Color.h"
 
 class Texture;
 
 class SDLWindow {
 
 public:
-    SDLWindow(string, int, int);
+    SDLWindow(std::string, int, int);
     ~SDLWindow();
 
     int getWidth() const;
@@ -25,28 +26,30 @@ public:
     void placeTexture(Texture*, int, int, SDL_Rect* = NULL);
     void render();
 
-    void setDrawColor(int, int, int);
-    void setDrawColor(int, int, int, int);
+    void setClearColor(const Color&);
+    void setClearColor(int, int, int, int = 255);
+
+    void setDrawColor(const Color&);
+    void setDrawColor(int, int, int, int = 255);
 
     SDL_Renderer* getRenderer() const;
 
-    // void setTarget(Texture&);
     void setDefaultTarget();
+
+    Event<int, int> WindowSizeChanged;
 
 private:
 
-    SDL_Window* _window;
-    SDL_Renderer* _renderer;
+    SDL_Window* window_;
+    SDL_Renderer* renderer_;
 
     int _width;
     int _height;
 
-    int _r;
-    int _g;
-    int _b;
-    int _a;
+    Color clear_color_;
+    Color draw_color_;
 
-    string _windowName;
+    std::string _windowName;
 
     bool _shown;
     bool _minimized;

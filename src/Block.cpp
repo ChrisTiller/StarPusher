@@ -3,7 +3,7 @@
 using namespace Graphics;
 
 Block::Block() {
-    _blockType = NONE;
+    _blockType = kNone;
 }
 
 Block::Block(BlockTypes blockType, Texture* texture) : GameObject(texture) {
@@ -19,19 +19,19 @@ Block::Block(BlockTypes blockType, Texture* texture, int x, int y) : GameObject(
 }
 
 void Block::moveUp() {
-    setLocation(getLocation().getX(), getLocation().getY() - 40);
+    location_.y -= 40;
 }
 
 void Block::moveDown() {
-    setLocation(getLocation().getX(), getLocation().getY() + 40);
+    location_.y += 40;
 }
 
 void Block::moveLeft() {
-    setLocation(getLocation().getX() - getTexture()->getWidth(), getLocation().getY());
+    location_.x -= getTexture()->getWidth();
 }
 
 void Block::moveRight() {
-    setLocation(getLocation().getX() + getTexture()->getWidth(), getLocation().getY());
+    location_.x += getTexture()->getWidth();
 }
 
 BlockTypes Block::getBlockType() {

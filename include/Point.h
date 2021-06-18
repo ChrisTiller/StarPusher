@@ -1,31 +1,31 @@
 #ifndef POINT_H
 #define POINT_H
 
-namespace Graphics {
+typedef struct Point {
 
-    class Point {
+    Point() {
+        x = 0;
+        y = 0;
+    }
 
-    public:
+    Point(int x, int y) {
+        this->x = x;
+        this->y = y;
+    }
 
-        Point();
-        Point(int, int);
+    Point& operator=(const Point& src) {
+        x = src.x;
+        y = src.y;
+        return *this;
+    }
 
-        int getX();
-        int getY();
-        
-        void setX(int);
-        void setY(int);
+    bool operator==(const Point& other) {
+        return (x == other.x && y == other.y);
+    }
 
-        bool operator==(const Point&);
-        bool operator!=(const Point&);
-        
-    private:
+    int x;
+    int y;
 
-        int _x;
-        int _y;
-
-    };
-
-}
+} Point;
 
 #endif

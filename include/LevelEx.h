@@ -12,7 +12,7 @@ public:
     LevelEx();
     LevelEx(std::vector<std::vector<Graphics::Block> >, std::vector<Graphics::Block>, std::vector<Graphics::Block>, Graphics::Block, int, int);
 
-    std::vector<Graphics::Block*> getVisibleBlocks(SDL_Rect);
+    std::vector<Graphics::Block*> getVisibleBlocks(const SDL_Rect&);
 
     int getWidth() const;
     int getHeight() const;
@@ -28,7 +28,7 @@ public:
 
 private:
 
-    std::vector<Graphics::Block*> getBlocksAtLocation(Graphics::Point);
+    std::vector<Graphics::Block*> getBlocksAtLocation(const Point&);
 
     bool performMoveOperation(void (Graphics::Block::*)(), void (Graphics::Block::*)());
 

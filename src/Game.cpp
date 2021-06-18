@@ -6,7 +6,7 @@ const int SCREEN_TICKS_PER_SECOND = 1000 / SCREEN_FPS;
 
 
 Game::Game(string name, int width, int height)
-    : _window(name, width, height), _running(true), _camera(&_window), _manager(this) {
+    : window_(name, width, height), _running(true), _manager(this), _camera(&window_) {
 
 
     if ((IMG_Init(IMG_INIT_PNG) & IMG_INIT_PNG) != IMG_INIT_PNG) {
@@ -61,7 +61,7 @@ void Game::run() {
             }
 
             _camera.handleEvents(event);
-            _window.handleEvents(event);
+            window_.handleEvents(event);
             _manager.handleEvents(event);
 
         }
@@ -69,11 +69,11 @@ void Game::run() {
         _manager.update();
         _camera.update();
 
-        _window.clear();
+        window_.clear();
 
         _manager.draw();
 
-        _window.render();
+        window_.render();
 
         Uint32 endingTicks = SDL_GetTicks() - startingTicks;
         if ( endingTicks < SCREEN_TICKS_PER_SECOND ){
@@ -92,7 +92,7 @@ void Game::quit() {
 }
 
 SDLWindow* Game::getWindowPtr() {
-    return &_window;
+    return &window_;
 }
 
 GameStateManager& Game::getGameStateManager() {

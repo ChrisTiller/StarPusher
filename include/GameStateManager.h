@@ -31,9 +31,11 @@ public:
 private:
 
     void RequestChangeState(GameState*, GameState*);
+    void RequestPushState(GameState*, GameState*);
     void RequestPopState(GameState*);
 
     EventHandler<GameState*, GameState*> changeHandler;
+    EventHandler<GameState*, GameState*> pushHandler;
     EventHandler<GameState*> popHandler;
 
     std::vector<GameState*> _states;

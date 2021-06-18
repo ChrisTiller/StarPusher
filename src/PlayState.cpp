@@ -2,6 +2,7 @@
 #include "../include/SDLWindow.h"
 #include "../include/Game.h"
 #include "../include/IntroState.h"
+#include "../include/PauseState.h"
 
 #include <iostream>
 
@@ -13,14 +14,14 @@ void PlayState::init(GameStateManager* manager) {
 
     _game = &_manager->getGame();
 
-    _window = _game->getWindowPtr();
+    window_ = _game->getWindowPtr();
 
     _levelNumber = 1;
     _currentLevel = ResourceManager::getInstance()->getLevel(1);
 
     _game->getCamera().setUse(true);
 
-    _window->setDrawColor(135,206,250);
+    window_->setDrawColor(135,206,250);
 
     _levelCompleted = false;
 
@@ -30,7 +31,7 @@ void PlayState::init(GameStateManager* manager) {
 void PlayState::cleanup() {
 
     if (_playState) {
-        _window = nullptr;
+        window_ = nullptr;
         _game = nullptr;
 
         delete _playState;
@@ -64,6 +65,11 @@ void PlayState::handleEvents(SDL_Event& event) {
             case SDLK_BACKSPACE:
                 RequestChangeState((GameState*)this, (GameState*)IntroState::instance());
                 break;
+
+            case SDLK_ESCAPE:
+                RequestPushState((GameState*)this, (GameState*)PauseState::instance());
+                break;
+
 
             case SDLK_c:
                 centerCamera();
@@ -106,9 +112,9 @@ void PlayState::draw() {
 
     for (auto blockToRender : _currentLevel.getVisibleBlocks(rct)) {
 
-        _window->placeTexture(blockToRender->getTexture(), \
-                              blockToRender->getLocation().getX() - _game->getCamera().getXPos(), \
-                              blockToRender->getLocation().getY() - _game->getCamera().getYPos());
+        window_->placeTexture(blockToRender->getTexture(), \
+                              blockToRender->getLocation().x - _game->getCamera().getXPos(), \
+                              blockToRender->getLocation().y- _game->getCamera().getYPos());
 
         blockToRender = nullptr;
     }
@@ -130,7 +136,14 @@ void PlayState::goToNextLevel() {
 }
 
 void PlayState::centerCamera() {
-    _game->getCamera().setXYPos(-(( _window->getWidth() / 2 ) - ( _currentLevel.getWidth() / 2 )), \
-                                -(( _window->getHeight() / 2 ) - ( _currentLevel.getHeight() / 2 )));
+    _game->getCamera().setXYPos(-(( window_->getWidth() / 2 ) - ( _currentLevel.getWidth() / 2 )), \
+                                -(( window_->getHeight() / 2 ) - ( _currentLevel.getHeight() / 2 )));
 }
 
+void PlayState::pause() {
+    _game->getCamera().setUse(false);
+}
+
+void PlayState::resume() {
+    _game->getCamera().setUse(true);
+}

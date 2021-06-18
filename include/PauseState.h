@@ -3,7 +3,7 @@
 
 #include "GameState.h"
 #include "SDLWindow.h"
-
+#include "Rectangle.h"
 
 class PauseState : public GameState {
 
@@ -27,10 +27,12 @@ protected:
     PauseState();
 
 private:
-    static PauseState* _instance;
+    static PauseState* instance_;
 
     Game* _game;
-    SDLWindow* _window;
+    SDLWindow* window_;
+
+    Rectangle _menuRect;
 
 };
 
